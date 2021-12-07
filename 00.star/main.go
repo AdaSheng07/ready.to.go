@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// print a star sign
+// Print a star sign
 func main() {
 	fmt.Println(
 		"            .,:llllllllll:,.            " +
