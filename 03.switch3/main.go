@@ -10,7 +10,7 @@ switch语句原生支持类型判断
 1. 可以利用 type-switch 来判断某个 interface 变量中实际存储的变量类型
 2. interface{} 是一个空的 interface 类型，是抽象的，其内容可以【接受】任何具体的类型如 int, float64, string 等
 3. 用 type-switch 类型判断的同时可以赋值新的变量，且类型自动匹配，新的变量的类型是万用的
-4. case 也可以是多分支条件的，变量仍是空接口类型interface{}，可对它直接赋值，但是获取它的值进行运算时需要断言，e.g.newMoney.(int), newMoney.(float64)
+4. case 也可以是多分支条件的，变量仍是空接口类型interface{}，可直接赋值，但是获取它的值进行运算时需要断言，e.g.newMoney.(int), newMoney.(float64)
 
 p.s. verb 通用输出：
 	%v	值的默认格式表示
