@@ -29,10 +29,10 @@ func main() {
 	case int, int8, int16, int32, int64: // case 可以多条件
 		newMoney = 10
 		// newMoney = newMoney + 12.34 // Invalid operation: newMoney + 12.34 (cannot convert the constant 12.34 to the type int)
-		fmt.Printf("newMoney %#v 是 %v\n", newMoney.(int)+10, reflect.TypeOf(newMoney))
+		fmt.Printf("newMoney %#v 是 %v\n", newMoney.(int)+10, reflect.TypeOf(newMoney)) // 断言后运算
 	case float64, float32: // case 可以多条件
 		newMoney = 10.5
-		fmt.Printf("newMoney %#v 是 %v\n", newMoney.(float64)+10.5, reflect.TypeOf(newMoney))
+		fmt.Printf("newMoney %#v 是 %v\n", newMoney.(float64)+10.5, reflect.TypeOf(newMoney)) // 断言后运算
 	case string:
 		newMoney = newMoney + "哈"
 		fmt.Printf("newMoney %#v 是 %v\n", newMoney, reflect.TypeOf(newMoney))
