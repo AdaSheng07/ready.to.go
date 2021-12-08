@@ -1,6 +1,6 @@
 # Ready To Go
 
-## Index
+## INDEX
 
 
 ## Module I
