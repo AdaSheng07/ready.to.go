@@ -41,15 +41,15 @@ restart2:
 	fmt.Printf("请输入%s的年龄：", name)
 	fmt.Scan(&age)
 	// 输入数据合法性验证：正整数；成年；在合理区间中
-	if result2, _ := regexp.MatchString("^[1-9]\\d*", strconv.Itoa(age)); !result2 { // 保证输入年龄都是正整数
+	if result2, _ := regexp.MatchString("[1-9][0-9]+", strconv.Itoa(age)); !result2 { // 保证输入年龄都是正整数
 		fmt.Print("年龄必须是正整数，请重新输入！\n")
-		goto restart2
+		goto restart2 // 重新录入年龄
 	} else if age < 18 { // 剔除年龄不到18岁的参与者
 		fmt.Print("未成年人体脂率不具参考意义，请录入成年人数据！\n")
 		goto restart1 // 重新录入参与者，覆盖
 	} else if age > 122 { // 世界吉尼斯纪录最长寿者为122岁
 		fmt.Print("请输入真实年龄！\n")
-		goto restart2
+		goto restart2 // 重新录入年龄
 	}
 
 restart3:
@@ -72,10 +72,10 @@ restart4:
 	result4, _ := regexp.MatchString("^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$", strconv.FormatFloat(height, 'f', 2, 64))
 	if !result4 {
 		fmt.Print("身高为正小数，小数点后最多保留2位，请重新输入！\n")
-		goto restart4
+		goto restart4 // 重新录入身高
 	} else if height < 0.7 || height > 2.455 {
 		fmt.Print("身高单位为米，请重新输入正确身高！\n")
-		goto restart4
+		goto restart4 // 重新录入身高
 	}
 
 restart5:
@@ -87,28 +87,28 @@ restart5:
 	result5, _ := regexp.MatchString("^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$", strconv.FormatFloat(weight, 'f', 2, 64))
 	if !result5 {
 		fmt.Print("体重为正小数，小数点后最多保留2位，请重新输入！\n")
-		goto restart5
+		goto restart5 // 重新录入体重
 	} else if weight > 635 || weight < 10 {
 		fmt.Print("请输入真实体重！\n")
-		goto restart5
+		goto restart5 // 重新录入体重
 	}
 
 	/* 男性与女性不同性别区间的体脂率范围不同，但整体来看可以依据节点划分，各性别的各判断标准对应的体脂率范围长度分别相同：
-	      sex   age	   |     偏瘦       |       标准        |      偏重       |       肥胖      |   严重肥胖
-	【1】  男   18-39  0%              10%      +6%	      16%     +5%      21%	    +5%	    26%
-	【2】  男   40-59  0%              11%      +6%	      17%     +5%      22%	    +5%	    27%
-	【3】  男    60+   0%              13%      +6%	      19%     +5%      24%	    +5%	    29%
-	       男                          s1       	     s1+6%   	     s1+6%+5% 	     s1+6%+5%+5%
-	【4】  女   18-39  0%              20%      +7%	      27%     +7%      34%	    +5%	    39%
-	【5】  女   40-59  0%              21%      +7%	      28%     +7%      35%	    +5%	    40%
-	【6】  女    60+   0%              22%      +7%	      29%     +7%      36%	    +5%	    41%
-	       女                          s1       	     s1+7%   	     s1+7%+7% 	     s1+7%+7%+5%
+	      sex   age    |     偏瘦       |       标准        |      偏重       |       肥胖      |   严重肥胖
+	【1】  男   18-39  0%              10%      +6%        16%     +5%      21%      +5%      26%
+	【2】  男   40-59  0%              11%      +6%        17%     +5%      22%      +5%      27%
+	【3】  男    60+   0%              13%      +6%        19%     +5%      24%      +5%      29%
+	       男                          s1                s1+6%            s1+6%+5%        s1+6%+5%+5%
+	【4】  女   18-39  0%              20%      +7%        27%     +7%      34%      +5%      39%
+	【5】  女   40-59  0%              21%      +7%        28%     +7%      35%      +5%      40%
+	【6】  女    60+   0%              22%      +7%        29%     +7%      36%      +5%      41%
+	       女                          s1                s1+7%            s1+7%+7%        s1+7%+7%+5%
 	*/
 
 	// 依据性别与年龄，确定当前参与者适用的体脂状态判定标准
 	switch {
 	case sex == "男":
-		sexWeight = 1
+		sexWeight = 1          // 男性的sexWeight为1
 		delta1 = 0.06          // 男性的【标准】范围区间长度为6%
 		delta2 = 0.05 + delta1 // 男性的【偏重】范围区间长度为5%
 		delta3 = 0.05 + delta2 // 男性的【肥胖】范围区间长度为5%
@@ -121,7 +121,7 @@ restart5:
 			s1 = 0.10 // 年龄18-39的男性【标准】范围从 10% 开始，对应上表【1】
 		}
 	case sex == "女":
-		sexWeight = 0
+		sexWeight = 0          // 女性的sexWeight为0
 		delta1 = 0.07          // 女性的【标准】范围区间长度为7%
 		delta2 = 0.07 + delta1 // 女性的【偏重】范围区间长度为7%
 		delta3 = 0.05 + delta2 // 女性的【肥胖】范围区间长度为5%
