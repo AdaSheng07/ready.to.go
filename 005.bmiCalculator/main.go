@@ -28,7 +28,7 @@ restart1:
 	// 录入姓名
 	var name string // 初始化姓名name
 	fmt.Printf("请输入第 %d 位参与者的姓名：", num)
-	fmt.Scanln(&name)
+	fmt.Scan(&name)
 	// 输入合法性验证：姓名必须由字母和汉字组成
 	if result1, _ := regexp.MatchString("[\u4e00-\u9fa5a-zA-Z]+", name); !result1 {
 		fmt.Print("姓名必须由字母或汉字组成，请重新输入！\n")
@@ -56,7 +56,7 @@ restart3:
 	// 录入性别
 	var sex string = "" // 初始化性别sex
 	fmt.Printf("请输入%s的性别：", name)
-	fmt.Scanln(&sex)
+	fmt.Scan(&sex)
 	// 输入合法性验证：必须为"男"或"女"
 	if sex != "男" && sex != "女" {
 		fmt.Print("性别必须为 男 或者 女，请重新录入性别！\n")
@@ -67,7 +67,7 @@ restart4:
 	// 录入身高
 	var height float64 = 0 // 初始化身高height
 	fmt.Printf("请输入%s的身高(m)：", name)
-	fmt.Scanln(&height)
+	fmt.Scan(&height)
 	// 输入数据合法性验证：必须是正浮点数，且值在合理区间
 	result4, _ := regexp.MatchString("^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$", strconv.FormatFloat(height, 'f', 2, 64))
 	if !result4 {
@@ -82,7 +82,7 @@ restart5:
 	// 录入体重
 	var weight float64 = 0 // 初始化体重weight
 	fmt.Printf("请输入%s的体重(kg)：", name)
-	fmt.Scanln(&weight)
+	fmt.Scan(&weight)
 	// 输入合法性验证：必须是正浮点数，且值在合理区间内
 	result5, _ := regexp.MatchString("^[1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*$", strconv.FormatFloat(weight, 'f', 2, 64))
 	if !result5 {
