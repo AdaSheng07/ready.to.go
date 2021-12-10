@@ -45,7 +45,7 @@
 [Version1.0 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0001.bmiCalculator1/main.go)
 
 #### 思考
-在 Version1.0 代码中，整个代码模块分为：
+在`Version1.0`代码中，整个代码模块分为：
 - 信息录入与数据合法性验证
 - 当前人员的健康水平判定标准
 - BMI与体脂率BFR的计算与存储
@@ -61,7 +61,7 @@
 **有没有更优美的写法呢？**
 
 #### 优化
-将Version1.0中的代码模块进行重构`refactor`成为函数方法，可在`main`函数中直接调用，大大简化`main`函数，使整个操作流程一目了然，还可以在此基础上解决更多需求。  
+将`Version1.0`中的代码模块进行重构`refactor`成为函数方法，可在`main`函数中直接调用，大大简化`main`函数，使整个操作流程一目了然，还可以在此基础上解决更多需求。
 
 [Version2.0 重构优化](https://github.com/AdaSheng07/ready.to.go/blob/d1483b82411414f66b69b75ba994f174f14490d0/000.homework/0001.bmiCalculator2/main.go)
 
@@ -130,6 +130,9 @@
 
 [Version1.0 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0002.parallelLines1/main.go)
 
-在此基础上进行优化，将输入合法性判断与输入模块合并重构`refactor`为一个新函数，将斜率存在与不存在的情况合并重构`refactor`为一个新函数，跳出数学思维。
+#### 优化
+在`Version1.0`基础上进行优化，抛弃`goto`语句，将输入合法性判断与输入模块合并重构`refactor`为一个新函数`InputCoordinates`，将斜率存在与不存在的情况的判定合并重构`refactor`为一个新函数`VerdictLinesRelation`，跳出数学思维。
 
-[Version2.0 重构优化]()
+[Version2.0 重构优化](https://github.com/AdaSheng07/ready.to.go/blob/a07834efef9ad9a42339682a36058524a75d7d4c/000.homework/0002.parallelLines2/main.go)
+
+### Appendix 参考资料
