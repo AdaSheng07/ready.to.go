@@ -72,12 +72,19 @@
 - 亚洲、欧洲、美洲的体质不同，年龄所占体脂比重不同，计算在相同身高、体重不变的情况下各洲的体脂......
 
 ### Appendix 参考资料
+
 ❖ ︎[在线正则表达式测试](https://tool.oschina.net/regex/)  
-❖ [常用正则表达式整理](https://xie.infoq.cn/article/7bf17ad93009c4a1f3045ea26)  
-❖ [基础知识-Golang 中的正则表达式](https://www.cnblogs.com/williamjie/p/9686311.html)  
-❖ [Golang 正则表达式（regexp）](https://cloud.tencent.com/developer/article/1706173)  
-❖ [Golang如何去判断字符串是数字还是字符](https://studygolang.com/topics/8696)  
-❖ [Golang之数据验证库validator的使用](https://juejin.cn/post/6990918041395544077)  
+
+❖ [常用正则表达式整理](https://xie.infoq.cn/article/7bf17ad93009c4a1f3045ea26)
+
+❖ [基础知识-Golang 中的正则表达式](https://www.cnblogs.com/williamjie/p/9686311.html)
+
+❖ [Golang 正则表达式（regexp）](https://cloud.tencent.com/developer/article/1706173)
+
+❖ [Golang如何去判断字符串是数字还是字符](https://studygolang.com/topics/8696)
+
+❖ [Golang之数据验证库validator的使用](https://juejin.cn/post/6990918041395544077)
+
 ❖ [Go的fmt效率问题](http://z-rui.github.io/post/2017/03/go-scanf/)
 
 ---
@@ -137,5 +144,7 @@
 
 ### Appendix 参考资料
 ❖ ︎[Go 语言多维数组](https://www.runoob.com/go/go-multi-dimensional-arrays.html)
+
 ❖ ︎[Go 语言向函数传递数组](https://www.runoob.com/go/go-passing-arrays-to-functions.html)
+
 ❖ ︎[Golang函数的值传递与引用传递，以及如何用指针和切片传递来避免数组传递的缺点](https://blog.csdn.net/benben_2015/article/details/80884537)
