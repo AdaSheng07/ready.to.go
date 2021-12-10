@@ -22,6 +22,7 @@
    - 根据每个人的性别和年龄确定体脂率BFR与健康水平判定标准：
      - 单独增加此模块，是为了**简化后续根据体脂率BFR值判断状态的过程，减少if-else嵌套**
      - 根据表格总结规律，其实是简单的数学问题
+![image](https://github.com/AdaSheng07/ready.to.go/blob/b86cbb5fbd925dee911c45aea541a8ad32767a3d/000.homework/img.png)
 3. 根据输入的信息计算BMI值，再计算体脂率BFR：
    - BMI计算公式：`BMI = 体重(kg) ÷ (身高(m) × 身高(m))`
    - BFR计算公式：`BFR = 1.2 × BMI + 0.23 × 年龄 - 5.4 - 10.8 × sexWeight`
@@ -128,3 +129,7 @@
 ### 代码实现与优化
 
 [Version1.0 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0002.parallelLines1/main.go)
+
+在此基础上进行优化，将输入合法性判断与输入模块合并重构`refactor`为一个新函数，将斜率存在与不存在的情况合并重构`refactor`为一个新函数，跳出数学思维。
+
+[Version2.0 重构优化]()
