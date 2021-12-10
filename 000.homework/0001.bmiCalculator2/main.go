@@ -39,7 +39,7 @@ func main() {
 		sex = InputSex(name)
 		// 录入身高并验证数据合法性
 		height = InputHeight(name)
-		// 录入体重
+		// 录入体重并验证数据合法性
 		weight = InputWeight(name)
 
 		/* 男性与女性不同性别区间的体脂率范围不同，但整体来看可以依据节点划分，各性别的各判断标准对应的体脂率范围长度分别相同：
