@@ -136,5 +136,6 @@
 [Version2.0 重构优化](https://github.com/AdaSheng07/ready.to.go/blob/a07834efef9ad9a42339682a36058524a75d7d4c/000.homework/0002.parallelLines2/main.go)
 
 ### Appendix 参考资料
-
-
+❖ ︎[Go 语言多维数组](https://www.runoob.com/go/go-multi-dimensional-arrays.html)
+❖ ︎[Go 语言向函数传递数组](https://www.runoob.com/go/go-passing-arrays-to-functions.html)
+❖ ︎[Golang函数的值传递与引用传递，以及如何用指针和切片传递来避免数组传递的缺点](https://blog.csdn.net/benben_2015/article/details/80884537)
