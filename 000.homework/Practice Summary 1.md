@@ -40,10 +40,10 @@
    - 格式化输出最终的总人数与他们的平均体脂率
 
 ### 代码实现与优化
-[Version 1 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0001.bmiCalculator1/main.go)
+[Version1.0 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0001.bmiCalculator1/main.go)
 </br>
 #### 思考
-在Version 1代码中，整个代码模块分为：
+在 Version1.0 代码中，整个代码模块分为：
 - 信息录入与数据合法性验证
 - 当前人员的健康水平判定标准
 - BMI与体脂率BFR的计算与存储
@@ -61,7 +61,22 @@
 #### 优化
 将Version 1中的代码模块进行重构`refactor`成为函数方法，可在`main`函数中直接调用，大大简化`main`函数，使整个操作流程一目了然，还可以在此基础上解决更多需求。  
 
-[Version 2 优化]()
+[Version2.0 重构优化](https://github.com/AdaSheng07/ready.to.go/blob/d1483b82411414f66b69b75ba994f174f14490d0/000.homework/0001.bmiCalculator2/main.go)
+
+#### Furthermore...
+在此基础上实现一些新需求：
+- 不要求输入性别，同时计算两个性别的体脂
+- 不要求输入年龄，计算在当前身高、体重下不同年龄的体脂
+- 亚洲、欧洲、美洲的体质不同，年龄所占体脂比重不同，计算在相同身高、体重不变的情况下各洲的体脂......
+
+#### Appendix 参考资料
+❖ ︎[在线正则表达式测试](https://tool.oschina.net/regex/)  
+❖ [常用正则表达式整理](https://xie.infoq.cn/article/7bf17ad93009c4a1f3045ea26)  
+❖ [基础知识-Golang 中的正则表达式](https://www.cnblogs.com/williamjie/p/9686311.html)  
+❖ [Golang 正则表达式（regexp）](https://cloud.tencent.com/developer/article/1706173)  
+❖ [Golang如何去判断字符串是数字还是字符](https://studygolang.com/topics/8696)  
+❖ [Golang之数据验证库validator的使用](https://juejin.cn/post/6990918041395544077)  
+❖ [Go的fmt效率问题](http://z-rui.github.io/post/2017/03/go-scanf/)
 
 ---
 ## 两条直线的关系判定
