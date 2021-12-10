@@ -143,6 +143,11 @@
 
 [Version2.0 重构优化](https://github.com/AdaSheng07/ready.to.go/blob/a07834efef9ad9a42339682a36058524a75d7d4c/000.homework/0002.parallelLines2/main.go)
 
+通过重构优化，将`main`主函数代码模块进一步简化抽象为：
+1. 输入四组坐标并判断合法性，确认没有出现重复坐标
+2. 直接判断两直线的关系，并输出结果
+3. 增加了询问再来一次/结束判定直线关系的功能
+
 ### Appendix 参考资料
 ❖ ︎[Go 语言多维数组](https://www.runoob.com/go/go-multi-dimensional-arrays.html)
 
