@@ -6,6 +6,7 @@ func main() {
 	for {
 		var line1, line2 [2][2]float64 // 声明两个多维的数组
 		var ans string                 // 回答是否继续判定直线关系
+
 		// 输入坐标，存入2*2的多维数组，并对输入数据的合法性进行确认
 		line1, line2 = InputCoordinates(line1, line2)
 		/*
