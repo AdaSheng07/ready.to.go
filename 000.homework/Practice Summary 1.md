@@ -1,6 +1,7 @@
 # Practice Summary 1
 
 ## 基于BMI的体脂计算器
+[Version 1 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0001.bmiCalculator1/main.go)
 ### 实现
 连续输入多人信息，输出每个人的姓名、BMI、体脂率、建议，最后打印总人数和他们的平均体脂率。
 ### 主体思路
@@ -29,3 +30,7 @@
    - `if-else`条件
 5. 按照输入顺序，输出每个人的姓名、BMI、体脂率BFR、对应建议
 6. 计算并打印所有输入人员的总人数和平均体脂率BFR
+
+
+## 两条直线的关系判定
+[Version 1 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0002.parallelLines1/main.go)
