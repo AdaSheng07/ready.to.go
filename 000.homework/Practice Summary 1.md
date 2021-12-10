@@ -64,13 +64,13 @@
 
 [Version2.0 重构优化](https://github.com/AdaSheng07/ready.to.go/blob/d1483b82411414f66b69b75ba994f174f14490d0/000.homework/0001.bmiCalculator2/main.go)
 
-#### Furthermore...
+### Furthermore...
 在此基础上实现一些新需求：
 - 不要求输入性别，同时计算两个性别的体脂
 - 不要求输入年龄，计算在当前身高、体重下不同年龄的体脂
 - 亚洲、欧洲、美洲的体质不同，年龄所占体脂比重不同，计算在相同身高、体重不变的情况下各洲的体脂......
 
-#### Appendix 参考资料
+### Appendix 参考资料
 ❖ ︎[在线正则表达式测试](https://tool.oschina.net/regex/)  
 ❖ [常用正则表达式整理](https://xie.infoq.cn/article/7bf17ad93009c4a1f3045ea26)  
 ❖ [基础知识-Golang 中的正则表达式](https://www.cnblogs.com/williamjie/p/9686311.html)  
@@ -81,4 +81,27 @@
 
 ---
 ## 两条直线的关系判定
-[Version 1 初级实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0002.parallelLines1/main.go)
+
+### 需求
+两点决定一条直线，两条线是否平行取决于两条线的斜率是否一样。
+
+### 主题思路
+
+1. 输入直线1的两组坐标
+2. 输入直线2的两组坐标 
+3. 输入合法性判断：有无重合点 
+4. 垂直于x轴的斜率不存在情况：
+   - 都不存在/一个不存在
+   - 平行/重合/相交 
+5. 斜率存在的情况： 
+   - 斜率相同，截距不同：平行 
+   - 斜率相同，截距也相同：重合 
+   - 斜率不相同：相交
+
+### 细节展开与补充
+
+
+
+### 代码实现与优化
+
+[代码实现](https://github.com/AdaSheng07/ready.to.go/blob/69d48f3fe29d5566806013519d09fb50a516c6db/000.homework/0002.parallelLines1/main.go)
