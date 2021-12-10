@@ -55,7 +55,8 @@
 
 在录入数据合法性验证和询问是否继续录入信息时，为了实现条件转移，复用代码，构成循环，使用了较多的`goto`语句跳转到指定标签。
 
-☞ [为什么说 goto 是一种不好的用法？](https://www.zhihu.com/question/20259336)  
+☞ [为什么说 goto 是一种不好的用法？](https://www.zhihu.com/question/20259336)
+
 ☞ [Why does Go have a "goto" statement?](https://stackoverflow.com/questions/11064981/why-does-go-have-a-goto-statement)
 
 **有没有更优美的写法呢？**
