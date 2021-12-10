@@ -53,12 +53,13 @@
 
 在录入数据合法性验证和询问是否继续录入信息时，为了实现条件转移，复用代码，构成循环，使用了较多的`goto`语句跳转到指定标签。
 
-☞[为什么说 goto 是一种不好的用法？](https://www.zhihu.com/question/20259336)
+☞ [为什么说 goto 是一种不好的用法？](https://www.zhihu.com/question/20259336)  
+☞ [Why does Go have a "goto" statement?](https://stackoverflow.com/questions/11064981/why-does-go-have-a-goto-statement)
 
 **有没有更优美的写法呢？**
 
 #### 优化
-利用函数式编程思想，将Version 1中的代码模块进行重构refactor成为函数方法，在main函数中直接调用，可以大大简化main函数，使整个操作流程一目了然。  
+将Version 1中的代码模块进行重构`refactor`成为函数方法，可在`main`函数中直接调用，大大简化`main`函数，使整个操作流程一目了然，还可以在此基础上解决更多需求。  
 
 [Version 2 优化]()
 
