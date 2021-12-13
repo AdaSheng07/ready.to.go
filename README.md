@@ -19,7 +19,7 @@
 
 ## 数组 切片
 
-### 数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/62fce9be1b277ad49d400d6257d41182817f5887/chapter1/006.array/main.go)  
+### 数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/56ec88917763f732b33170478d0e1d794ec9bef9/chapter1/006.array1/main.go)  
 数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，即由固定长度的特定类型元素组成的序列。  
 这种类型可以是任意的原始类型例如整型`int`、字符串`string`、浮点型`float`或者自定义类型。
 
