@@ -17,6 +17,8 @@
 ### 基于BMI的体脂计算器
 
 
+****
+
 ### 数组 切片
 
 #### 数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/62fce9be1b277ad49d400d6257d41182817f5887/chapter1/006.array/main.go)  
