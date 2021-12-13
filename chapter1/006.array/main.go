@@ -24,4 +24,32 @@ func main() {
 	fmt.Println(b)
 	fmt.Println(d)
 	fmt.Println(e)
+	fmt.Println(len(e)) // 数组有固定长度
+
+	// 数组赋值
+	var array1 [3]int
+	array1 = [3]int{1, 1, 1}
+	fmt.Println(array1)
+	array1 = [3]int{2, 2, 2}
+	fmt.Println(array1)
+
+	// 对数组中的元素赋值
+	var array2 [3]int
+	array2[0] = 1
+	array2[1] = 2
+	array2[2] = 3
+	fmt.Println(array2)
+	// array2[-1] = 1 // 报错：越界赋值
+	// array2[5] = 3 // 报错：越界赋值
+
+	for i := 0; i < len(array2); i++ {
+		fmt.Println(array2[i])
+	}
+
+	// for range 遍历访问数组
+	for i, val := range array2 {
+		fmt.Printf("%d, array2[%d]: %d\n", array2[i], i, val)
+		fmt.Printf("%d\t%d\n", i, val)
+	}
+
 }
