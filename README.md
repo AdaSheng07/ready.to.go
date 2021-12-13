@@ -75,7 +75,7 @@ age := [5]int{1:24,4:35}
   2       3
   */
   ```
-### 多维数组 [link]()
+### 多维数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/d5077093f5549509d58f58ed096831d06cffd7aa/chapter1/006.array2/main.go)
 
 **多维数组的声明**
 
