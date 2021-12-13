@@ -75,6 +75,72 @@ age := [5]int{1:24,4:35}
   2       3
   */
   ```
+### 多维数组 [link]()
+
+**多维数组的声明**
+
+声明一个`n`维数组：
+```
+    var variable_name [SIZE1][SIZE2]...[SIZEn]variable_type
+    
+    e.g. var a [3][3]int
+```
+一组方括号`[]`定义的是一个一维数组，多组方括号`[][]`或者`[][][]`或者任意多`[]`的定义多维数组。
+
+以下方的二维数组为例，二维数组可认为是一个表格，`x`为行，`y`为列，二维数组可以通过`a[i][j]`来表示。
+
+![img.png](pics/img.png)
+
+**初始化二维数组**
+
+```
+    // 方式一：数组长度有限
+    variable_name := [SIZE1][SIZE2]variable_type{}
+        variable_name[0] = [SIZE2]variable_type{......}
+        variable_name[1] = [SIZE2]variable_type{......}
+        ...
+        variable_name[SIZE1 - 1] = [SIZE2]variable_type{......}
+    
+    variable_name := [SIZE1][SIZE2]variable_type{
+        [SIZE2]variable_type{......}
+        [SIZE2]variable_type{......}
+        ...
+        [SIZE2] variable_type{......}
+    }
+    
+    // 方式二：优化数组长度管理，支持动态添加
+    variable_name := [...][SIZE2]variable_type{
+        [SIZE2]variable_type{......}
+        [SIZE2]variable_type{......}
+        [SIZE2]variable_type{......}
+        ...
+    }
+```
+**多维数组的遍历**
+
+多维数组的遍历通过`for-loop`层层降维，也可以用`for range`访问每个元素。对于一个`n`维的数组：
+```
+    for d1, d1val := range array{
+        for d2, d2val := range d1val{
+            for d3, d3val := range d2val{
+            ...
+            }
+        }
+    }
+```
+再以二维数组为例：
+``` go
+    c := [...][3]string{
+            [3]string{"take", "take", "take"},
+            [3]string{"go", "go", "go"},
+            [3]string{"fine", "fine", "fine"},
+        }
+    for d1, d1val := range c {
+        for d2, d2val := range d1val {
+            fmt.Println(d1, d1val, d2, "val =", d2val)
+        }
+    }
+```
 
 ### 切片
 
