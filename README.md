@@ -142,7 +142,8 @@ age := [5]int{1:24,4:35}
     }
 ```
 ***
-### 切片
+### 切片 [link]()
+****
 
 
 ## Map
@@ -150,10 +151,23 @@ age := [5]int{1:24,4:35}
 
 ## 🟦 Module 1 Practice Collection
 
+### 数组
+ 
+> **Q1**  创建一个一维数组，并反转它  
+>
+>      [>> How to Reverse an Array w/o Creating a New One?]()
+
+> **Q2**  用多维数组写一个日历表，需要考虑每个月的天数不同，需要考虑是平年还是闰年来专门处理二月  
+>
+>
+
+> **Q3**  【提升篇】日历按照一周的宽度显示（第一列为周一），且每个日期匹配到对应的列
 
 ****
 ## Module II
 ## 函数
+
+❖ [Go 语言向函数传递数组](https://www.runoob.com/go/go-passing-arrays-to-functions.html)
 
 ## 包
 ## 函数方法论
