@@ -14,12 +14,11 @@ func main() {
 	var smallMonth []int // apr, jun, sep, nov
 	var feb []int
 
-	// 大小月，大月31天，小月30天
+	// 初始化大小月，大月31天，小月30天
 	for i := 1; i <= 30; i++ {
-		bigMonth = append(bigMonth, i)
 		smallMonth = append(smallMonth, i)
 	}
-	bigMonth = append(bigMonth, 31)
+	bigMonth = append(smallMonth, 31)
 
 	// 判断平年与闰年，确定二月的天数
 	var febDays int
@@ -37,24 +36,25 @@ func main() {
 		feb = append(feb, i)
 	}
 
-	var calendar [][]int
-	calendar = append(calendar, bigMonth)   // january
-	calendar = append(calendar, feb)        // february
-	calendar = append(calendar, bigMonth)   // march
-	calendar = append(calendar, smallMonth) // april
-	calendar = append(calendar, bigMonth)   // may
-	calendar = append(calendar, smallMonth) // june
-	calendar = append(calendar, bigMonth)   // july
-	calendar = append(calendar, bigMonth)   // august
-	calendar = append(calendar, smallMonth) // september
-	calendar = append(calendar, bigMonth)   // october
-	calendar = append(calendar, smallMonth) // november
-	calendar = append(calendar, bigMonth)   // december
-
+	// 月份数组
 	var month [12]string = [12]string{"january", "february", "march", "april", "may", "june",
 		"july", "august", "september", "october", "november", "december",
 	}
 
+	// 生成年日历
+	var calendar [][]int
+	for _, val := range month {
+		switch val {
+		case "january", "march", "may", "july", "august", "october", "december":
+			calendar = append(calendar, bigMonth)
+		case "april", "june", "september", "november":
+			calendar = append(calendar, smallMonth)
+		case "february":
+			calendar = append(calendar, feb)
+		}
+	}
+
+	// 按月打印年日历
 	for i := 0; i <= 11; i++ {
 		fmt.Println(month[i])
 		for _, val := range calendar[i] {
