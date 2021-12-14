@@ -155,7 +155,7 @@ age := [5]int{1:24,4:35}
  
 > **Q1**  创建一个一维数组，并反转它  
 >
->      [>> How to Reverse an Array w/o Creating a New One?]()
+>      [>> How to Reverse an Array w/o Creating a New One?](https://github.com/AdaSheng07/ready.to.go/blob/76668b88b729bcbd51f76fcbb93e07b1997d2155/chapter1/006.reverseArray/main.go)
 
 > **Q2**  用多维数组写一个日历表，需要考虑每个月的天数不同，需要考虑是平年还是闰年来专门处理二月  
 >
