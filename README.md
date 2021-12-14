@@ -160,11 +160,12 @@ age := [5]int{1:24,4:35}
 
 > **Q2**  用多维数组写一个日历表，需要考虑每个月的天数不同，以及是平年还是闰年来专门处理二月  
 >
->      [>> Print out Calendar of a Given Year](https://github.com/AdaSheng07/ready.to.go/blob/36d951a465590f0892ee76e0d62148e853cc004b/chapter1/006.calendar1/main.go)
+>      [>> Print out Calendar of a Given Year](https://github.com/AdaSheng07/ready.to.go/blob/f5f6d8c3ccd7ab2198939ea530121e9adc8379aa/chapter1/006.calendar1/main.go)
 
 > **Q3**  【提升篇】日历按照一周的宽度显示（第一列为周一），且每个日期匹配到对应的列
 >
-> 
+>      [>> Print out Calendar of a Given Year](https://github.com/AdaSheng07/ready.to.go/blob/36d951a465590f0892ee76e0d62148e853cc004b/chapter1/006.calendar1/main.go)
+
 
 ****
 ## Module II
