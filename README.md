@@ -16,9 +16,9 @@
 
 ## 条件 分支表达式 循环
 
-## 🔸 数组 切片
+## 🔶 数组 切片
 
-### 数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/56ec88917763f732b33170478d0e1d794ec9bef9/chapter1/006.array1/main.go)  
+### 🔸 数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/56ec88917763f732b33170478d0e1d794ec9bef9/chapter1/006.array1/main.go)  
 数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，即由固定长度的特定类型元素组成的序列。  
 这种类型可以是任意的原始类型例如整型`int`、字符串`string`、浮点型`float`或者自定义类型。
 
@@ -74,7 +74,7 @@ age := [5]int{1:24,4:35}
   2       3
   */
   ```
-### 多维数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/d5077093f5549509d58f58ed096831d06cffd7aa/chapter1/006.array2/main.go)
+### 🔸 多维数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/d5077093f5549509d58f58ed096831d06cffd7aa/chapter1/006.array2/main.go)
 
 **多维数组的声明**
 
@@ -141,7 +141,7 @@ age := [5]int{1:24,4:35}
     }
 ```
 ***
-### 切片 [link]()
+### 🔸 切片 [link]()
 
 
 ****
@@ -160,12 +160,14 @@ age := [5]int{1:24,4:35}
 
 > **Q2**  用多维数组写一个日历表，需要考虑每个月的天数不同，以及是平年还是闰年来专门处理二月  
 >
->      [>> Print out Calendar of a Given Year](https://github.com/AdaSheng07/ready.to.go/blob/f5f6d8c3ccd7ab2198939ea530121e9adc8379aa/chapter1/006.calendar1/main.go)
+>      [>> Print out Calendar of a Given Year](https://github.com/AdaSheng07/ready.to.go/blob/b21fd48ba4780bb7b5fc1dc8a919e1cd3ef14111/chapter1/006.calendar1/main.go)
 
 > **Q3**  【提升篇】日历按照一周的宽度显示（第一列为周一），且每个日期匹配到对应的列
 >
->      [>> Print out Calendar of a Given Year](https://github.com/AdaSheng07/ready.to.go/blob/36d951a465590f0892ee76e0d62148e853cc004b/chapter1/006.calendar1/main.go)
-
+>      [>> Print out Calendar w Weekdays of a Given Year (Advanced)](https://github.com/AdaSheng07/ready.to.go/blob/b21fd48ba4780bb7b5fc1dc8a919e1cd3ef14111/chapter1/006.calendar2/main.go)  
+>
+>      ☞ [计算任何一天是星期几的几种算法](https://blog.csdn.net/luoyayun361/article/details/54881835)  
+>      ☞ [golang向上取整、向下取整和四舍五入](https://studygolang.com/articles/12965)
 
 ****
 ## Module II
