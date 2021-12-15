@@ -164,7 +164,7 @@ age := [5]int{1:24,4:35}
 
 > **Q3**  【提升篇】日历按照一周的宽度显示（第一列为周一），且每个日期匹配到对应的列
 >
->      [>> Print out Calendar w Weekdays of a Given Year (Advanced)](https://github.com/AdaSheng07/ready.to.go/blob/a91292341e7415204288540dceac739609f3a160/chapter1/006.calendar2/main.go)  
+>      [>> Print out Calendar w Weekdays of a Given Year (Advanced)](https://github.com/AdaSheng07/ready.to.go/blob/4f419675f04290dfedfaed716de0d752b912bd1f/chapter1/006.calendar2/main.go)  
 >
 >      ☞ [计算任何一天是星期几的几种算法](https://blog.csdn.net/luoyayun361/article/details/54881835)  
 >      ☞ [golang向上取整、向下取整和四舍五入](https://studygolang.com/articles/12965)
