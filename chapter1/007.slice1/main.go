@@ -46,6 +46,36 @@ func main() {
 	fmt.Printf("After deleting elements: slice3 = %v\n", slice3)
 	// NOTICE: how and why does slice3 change as well?
 
+	// Before invert a new element, make a backup
+	a = []int{6, 4, 2, 0}
+	backup := a[1:]
+	fmt.Println("backup is: ", backup) // [4 2 0]
+	a = append(a[:1], 120)
+	fmt.Println("a is: ", a)           // [6 120]
+	fmt.Println("backup is: ", backup) // [120 2 0]
+	a = append(a, backup...)
+	fmt.Println("a is: ", a) // [6 120 120 2 0], not [6 120 4 2 0], why?
+	// `backup` updates as `a` updates, they share the same memory space and change synchronously.
+	// How can we solve it?
+	a2 := []int{6, 4, 2, 0}
+	backup2 := append([]int{}, a2[1:]...)
+	fmt.Println("backup2 is: ", backup2) // [4 2 0]
+	a2 = append(a2[:1], 220)
+	fmt.Println("a2 is: ", a2)           // [6 220]
+	fmt.Println("backup2 is: ", backup2) // [4 2 0]
+	a2 = append(a2, backup2...)
+	fmt.Println("a2 is: ", a2) // [6 220 4 2 0]
+	// We can use copy as well to make an effective backup
+	a3 := []int{6, 4, 2, 0}
+	var backup3 []int = make([]int, len(a3[1:]), cap(a3[1:])*2)
+	copy(backup3, a3[1:])
+	fmt.Println("backup3 is: ", backup3) // [4 2 0]
+	a3 = append(a3[:1], 320)
+	fmt.Println("a3 is: ", a3)           // [6 320]
+	fmt.Println("backup3 is: ", backup3) // [4 2 0]
+	a3 = append(a3, backup3...)
+	fmt.Println("a3 is: ", a3) // [6 320 4 2 0]
+
 	// 3. use two slices to create a new slice
 	fmt.Println("Put slice1 and slice2 together to create slice4 ")
 	slice4 := append(slice1[:], slice2[:]...)
