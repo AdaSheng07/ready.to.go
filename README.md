@@ -141,7 +141,7 @@ age := [5]int{1:24,4:35}
     }
 ```
 
-### 数组与切片的比较
+### 🔸 数组与切片的比较
 
 切片是对数组的抽象。数组的长度是不可改变的，
 而相比之下，切片是一种更加灵活，功能更多的内置类型，可以理解为一种变长数组，或者动态数组。
@@ -181,6 +181,7 @@ age := [5]int{1:24,4:35}
 
 **动态增加、删除、截取切片中的元素** [link](https://github.com/AdaSheng07/ready.to.go/blob/02c813c001594cca665171f452d097302ca9f901/chapter1/007.slice1/main.go)
 1. 利用`append`对切片进行追加、插入和删除元素的操作
+
 - 切片没有直接的删除操作
 - `slice_name[lower-bound:upper-bound]`的区间是**左闭右开**的
 - 用`append`插入元素时会覆盖原有元素，需要提前做备份，如何做一份有效备份？
@@ -198,6 +199,8 @@ age := [5]int{1:24,4:35}
   copy(backup, a[1:])
   ```
 2. 还可以利用`make`对切片进行扩容：`make(slice_name type, len(slice_name), cap(slice_name))`
+<br>
+<br>
 3. 利用`copy`拷贝切片的内容
 - 在拷贝`source`切片到`destination`切片之前，需要先声明`destination`切片并初始化容量为`source`切片的两倍（可用`make`）
 - 语法：`copy(dst []Type, src []Type)`
@@ -210,13 +213,110 @@ age := [5]int{1:24,4:35}
 
 **Appendix**
 
+☞  [Go 字符串编码，Unicode 和UTF-8](https://segmentfault.com/a/1190000019361462)
 ☞  [GO操作切片数组时不当，数据被覆盖](https://blog.csdn.net/weixin_44145242/article/details/111299356)  
 ☞  [Go 字符串编码，Unicode 和UTF-8](https://segmentfault.com/a/1190000019361462)
 ****
 
 
-## Map
+## 🔶 Map
 
+`Map`是一个`key-value`组合的结构体，一种无序的键值对的集合，常用实现方式是二叉树和哈希表（散列表）。
+`Map`通过`key`来快速检索数据，`key`的作用类似于数组与切片中的索引，指向数据的值`value`。
+`key`总是唯一的，相同的`key`拿到相同的`value`，更新`value`时，会覆盖相同`key`的原有`value`值。
+
+### 🔸 使用`Map`的优势：快速查找，从`key`定位到`value`
+
+当数据量很大时，e.g. >10000，仍然用数组或者切片来存储，会出现什么问题？
+
+如果我们需要查找数据集合中的某一组数据，需要`for-loop`遍历整个数组/切片，再比较值是否相等来锁定目标数据，时间复杂度是`O(n)`，很大。
+
+如果在总共` 10000 `人中找第` 5000 `个人` 2000 `次，一共在切片上比较`5000 * 2000`次，效率太低。
+
+`Map`是为了解决这样的问题而存在的，只要数据组中的每一组数据都是是唯一的，我们就可以用`key-value`构造`Map`来进行存储。
+
+![img.png](pics/map.png)
+
+### 🔸 `Map`的定义与初始化 [link](https://github.com/AdaSheng07/ready.to.go/blob/0bc031aec6339e4f13d7ab4705546030a8ec0dc6/chapter1/008.map1/main.go)
+
+定义`map`时注意`key`与`value`的类型都需要声明。
+`map`定义可以是符合类型，它的`key`与`value`都可以是任意类型，e.g. `int`,`float64`, `array`, `slice`, etc.
+
+主要有两种定义方式：
+```
+  1. use keyword `map` to declare and initialize
+  var map_variable_name map[key_data_type]value_data_type
+  map_variable_name := map[key_data_type]value_data_type{}
+  map_variable_name := map[key_data_type]value_data_type{key1: value1, key2: value2, key3: value3, ...}
+  
+  2. use keyword `map` to declare, then use built-in function make() to initialize
+  var map_variable_name map[key_data_type]value_data_type
+  map_variable_name = make(map[key_data_type]value_data_type, length)
+  
+  3. use built-in function make() to declare, then add in key-value elements
+  map_variable_name := make(map[key_data_type]value_data_type, length)
+  map_variable_name[key1] = value1
+  map_variable_name[key2] = value2
+  ...
+ ```
+`Map`定义的`key`与`value`类型可以**嵌套使用**，但要注意多层嵌套后代码意义是否会混淆，影响可读性，如：
+```
+  map_variable_name := map[string]map[string]map[int]float64{}
+```
+
+### 🔸 对`map`的操作 [link](https://github.com/AdaSheng07/ready.to.go/blob/0bc031aec6339e4f13d7ab4705546030a8ec0dc6/chapter1/008.map2/main.go)
+
+如果不初始化/实例化`map`，就会默认初始化为`nil map`。`Map`不用实例化就可以读取和删除，但`nil map`**不能**用来写入/存放键值对：
+```
+  panic: assignment to entry in nil map
+```
+
+**`Map`的增删改查**
+
+`Map`属于`Golang`的变量范畴，也是强类型的。当定义好`map`后，它只能容纳对应类型的数据。
+
+>【回顾】如何在切片中间插入一个元素?
+> 
+> 备份切片扩容 >> 拷贝备份 >> 用`append`插入值 >> 用`append`结合备份与追加元素后的新切片
+
+此操作的**风险高，代价大**，而`Map`的增删改查是极其方便的：
+
+```
+  1. add/change key-value
+  map_variable_name[key_name] = key_value
+  * If this key does not exist in map, add this key-value pair in map; else, change its value in the map.
+  
+  2. delete key-value
+  delete(map_variable_name, key)
+  * We can delete the same key repeatedly from map.
+  
+  3. lookup key-value：take key as index of map
+  map_variable_name[key]
+```
+>【注意】如果此时`map`中不存在这个`key`，会自动加入此`key`，但返回的`value`是**假值**。  
+>
+> 如何判断验证真假值（`key`在`map`中是否存在）呢？
+> ```
+> value, ok := map_variable_name[key]
+> * If ok is true, value is a true value;
+>   else if ok is false, value is a false value.
+> ```
+
+
+**`Map`的遍历**
+```
+  for key, value := range map_variable_name {
+      fmt.Printf("%v\t%v\n", key, value)
+  }
+  
+  for key := range map_variable_name{
+      fmt.Println(map_variable_name[key])
+  }
+```
+**Appendix**
+
+☞   [Go 语言Map(集合)](https://www.runoob.com/go/go-map.html)
+☞   [Go语言map的创建](https://haicoder.net/golang/golang-map-make.html)
 
 ## 🟦 Module 1 Practice Collection
 
@@ -247,8 +347,14 @@ age := [5]int{1:24,4:35}
 > **Q3**  有一个包含中英文的切片，如果是英文的，转换它们的大小写
 >       
 >
+### 🔹 Map 
+> **Q1**  用 Map 管理 20人 的分数，并做如下操作：
+> 1. 算出所有人的平均分
+> 2. 根据分数高低对这 20 分排名，高分在前。相同分数的在同一行。
+>       []()
 
 ****
+
 ## Module II
 ## 函数
 
