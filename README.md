@@ -214,7 +214,7 @@ age := [5]int{1:24,4:35}
 
 **Appendix**
 
-☞  [Go 字符串编码，Unicode 和UTF-8](https://segmentfault.com/a/1190000019361462)
+☞  [Go 字符串编码，Unicode 和UTF-8](https://segmentfault.com/a/1190000019361462)  
 ☞  [GO操作切片数组时不当，数据被覆盖](https://blog.csdn.net/weixin_44145242/article/details/111299356)  
 ☞  [Go 字符串编码，Unicode 和UTF-8](https://segmentfault.com/a/1190000019361462)
 ****
@@ -285,7 +285,8 @@ age := [5]int{1:24,4:35}
 ```
   1. add/change key-value
   map_variable_name[key_name] = key_value
-  * If this key does not exist in map, add this key-value pair in map; else, change its value in the map.
+  * If this key does not exist in map, add this key-value pair in map; 
+    else, change its value in the map.
   
   2. delete key-value
   delete(map_variable_name, key)
@@ -294,8 +295,8 @@ age := [5]int{1:24,4:35}
   3. lookup key-value：take key as index of map
   map_variable_name[key]
 ```
->【注意】如果此时`map`中不存在这个`key`，会自动加入此`key`，但返回的`value`是**假值**。  
->
+【注意】如果此时`map`中不存在这个`key`，会自动加入此`key`，但返回的`value`是**假值**。  
+
 > 如何判断验证真假值（`key`在`map`中是否存在）呢？
 > ```
 > value, ok := map_variable_name[key]
@@ -316,7 +317,7 @@ age := [5]int{1:24,4:35}
 ```
 **Appendix**
 
-☞   [Go 语言Map(集合)](https://www.runoob.com/go/go-map.html)
+☞   [Go 语言Map(集合)](https://www.runoob.com/go/go-map.html)  
 ☞   [Go语言map的创建](https://haicoder.net/golang/golang-map-make.html)
 
 ## 🟦 Module 1 Practice Collection
@@ -351,7 +352,8 @@ age := [5]int{1:24,4:35}
 ### 🔹 Map 
 > **Q1**  用 Map 管理 20人 的分数，并做如下操作：
 > 1. 算出所有人的平均分
-> 2. 根据分数高低对这 20 分排名，高分在前。相同分数的在同一行。
+> 2. 根据分数高低对这 20 分排名，高分在前 
+> 3. 相同分数的在同一行
 >       []()
 
 ****
