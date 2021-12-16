@@ -198,7 +198,10 @@ age := [5]int{1:24,4:35}
   var backup []int = make([]int, len(a[1:]), cap(a[1:])*2)
   copy(backup, a[1:])
   ```
-2. 还可以利用`make`对切片进行扩容：`make(slice_name type, len(slice_name), cap(slice_name))`
+2. 还可以利用`make`对切片进行扩容
+```
+  make(slice_name type, len(slice_name), cap(slice_name))
+```
 3. 利用`copy`拷贝切片的内容
 - 在拷贝`source`切片到`destination`切片之前，需要先声明`destination`切片并初始化容量为`source`切片的两倍（可用`make`）
 - 语法：`copy(dst []Type, src []Type)`
