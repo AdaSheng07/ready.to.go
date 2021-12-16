@@ -2,20 +2,13 @@
 
 ## INDEX
 
-
-
-
 ****
 ## 🟧 Module I
 
 ## 环境配置
-
 ## 变量 常量
-
 ## 计算符号 字符串
-
 ## 条件 分支表达式 循环
-
 ****
 ## 🔶 数组 切片
 ### 🔸 数组 [link](https://github.com/AdaSheng07/ready.to.go/blob/56ec88917763f732b33170478d0e1d794ec9bef9/chapter1/006.array1/main.go)  
@@ -219,7 +212,6 @@ age := [5]int{1:24,4:35}
 ☞  [Go 字符串编码，Unicode 和UTF-8](https://segmentfault.com/a/1190000019361462)
 ****
 
-
 ## 🔶 Map
 
 `Map`是一个`key-value`组合的结构体，一种无序的键值对的集合，常用实现方式是二叉树和哈希表（散列表）。
@@ -315,6 +307,17 @@ age := [5]int{1:24,4:35}
       fmt.Println(map_variable_name[key])
   }
 ```
+
+**`Map`的合并**
+```
+  map_variable_name1, map_variable_name2 := map[key_type]value_type, map[key_type]value_type
+  map_variable_name1[key1] = value1
+  map_variable_name2[key2] = value2
+  for k, v := range map_variable_name1{
+      map_variable_name2[k] = v
+  }
+```
+
 **Appendix**
 
 ☞   [Go 语言Map(集合)](https://www.runoob.com/go/go-map.html)  
@@ -338,7 +341,6 @@ age := [5]int{1:24,4:35}
 >
 >      ☞  [计算任何一天是星期几的几种算法](https://blog.csdn.net/luoyayun361/article/details/54881835)  
 >      ☞  [golang向上取整、向下取整和四舍五入](https://studygolang.com/articles/12965)
-
 ### 🔹 切片
 > **Q1**  创建一个一维整数切片，并用循环对它由从小到大排序
 >       
@@ -358,8 +360,10 @@ age := [5]int{1:24,4:35}
 
 ****
 
-## Module II
-## 函数
+****
+## 🟧 Module II
+
+## 🔶 函数
 
 ❖ [Go 语言向函数传递数组](https://www.runoob.com/go/go-passing-arrays-to-functions.html)
 
