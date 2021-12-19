@@ -21,7 +21,18 @@ func main() {
 	aveBmi2 = calculateAverage2(bmi...)
 	fmt.Println(aveBmi2)
 
+	// naming return values is a good habit
+	// 1. named return values can be used directly in main function
+	// 2. named return values also enables people who use this piece of code understand it quickly
+	sexOfStudent, ageOfStudent, heightOfStudent := getInfoOfStudents("Tom")
+	fmt.Println("Tom:\nsex:", sexOfStudent, "\nage:", ageOfStudent, "\nheight:", heightOfStudent, "m")
+
 }
+
+func getInfoOfStudents(stdName string) (sex string, age int, height float64) {
+	return "Male", 18, 1.70
+}
+
 func constructHello1(name string) string {
 	return fmt.Sprintf("hello, %s", name)
 }
