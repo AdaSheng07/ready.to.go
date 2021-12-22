@@ -3,7 +3,7 @@
 ## INDEX
 
 ****
-# 🟠 <u>Module 1</u>
+# 🟡 <u>Module 1</u>
 
 ## 环境配置
 ## 变量 常量
@@ -363,7 +363,7 @@ age := [5]int{1:24,4:35}
 
 ****
 
-# 🟠 <u>Module 2</u>
+# 🟡 <u>Module 2</u>
 
 ## 🔶 函数
 
@@ -683,7 +683,7 @@ int string是值传递
 ## 包
 ## 函数方法论
 
-## 🟦 Module 2 Practice Collection
+## 🔵 Module 2 Practice Collection
 
 ### 🔹 函数
 
