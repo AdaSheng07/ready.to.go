@@ -1,9 +1,9 @@
-# ⬜️ <u>Ready To Go</u>
+# ⚪️ <u>Ready To Go</u>
 
 ## INDEX
 
 ****
-# 🟧 <u>Module 1</u>
+# 🟠 <u>Module 1</u>
 
 ## 环境配置
 ## 变量 常量
@@ -323,7 +323,7 @@ age := [5]int{1:24,4:35}
 ☞   [Go 语言Map(集合)](https://www.runoob.com/go/go-map.html)  
 ☞   [Go语言map的创建](https://haicoder.net/golang/golang-map-make.html)
 
-## 🟦 Module 1 Practice Collection
+## 🔵 Module 1 Practice Collection
 
 ### 🔹 数组
 
@@ -363,7 +363,7 @@ age := [5]int{1:24,4:35}
 
 ****
 
-# 🟧 <u>Module 2</u>
+# 🟠 <u>Module 2</u>
 
 ## 🔶 函数
 
