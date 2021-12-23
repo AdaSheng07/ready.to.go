@@ -371,7 +371,8 @@ age := [5]int{1:24,4:35}
 在编程中，我们使用不同的函数，划分它们各自的功能，来完成不同的任务。
 每个程序必须有命名为`main()`的主函数。
 
-<u>我们为什么需要函数？</u>
+我们为什么需要函数？
+
 - 将一段经常需要使用的代码封装起来，在需要使用时可以直接调用，提高代码的复用率
 - 简化代码逻辑，提高代码效率
 - 节省代码阅读成本，提高代码的可读性
@@ -379,7 +380,7 @@ age := [5]int{1:24,4:35}
 - 更新编写代码的思路：从顶层展开伪代码结构（目的、投入、预期、产出）再进行模块化落实  
   ...
 
-### 🔸 函数的定义
+### 🔸 函数的定义与作用域 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function5/main.go)
 
 完整的函数的定义格式如下：
 ```
@@ -408,8 +409,15 @@ age := [5]int{1:24,4:35}
 
 **函数体`function body`**：函数定义的可执行代码的集合
 
-**作用域** [link]()
-- 函数体的大括号`{}`定义
+函数在定义时，根据预期目的的不同，会有很多**变种**：
+- 只有函数名`function_name`（目的），没有参数列表`[parameter list]`（投入）、返回值列表`return-value_list`（预期和产出），是单纯的函数调用，可用于：
+  - 内容的输入输出
+  - 加载全局变量
+- 有函数名`function_name`（目的）和参数列表`[parameter list]`（投入），
+  没有返回值列表`return-value_list`（预期和产出）
+
+**函数的作用域** 
+- 函数体的大括号`{}`定义函数的作用域
 - 作用域是指特定实体的有效范围，可包含变量、常量、函数、接口、对象等，它们互相可见、可操作
 - 作用域可嵌套，在嵌套时，子作用域可见母作用域的所有元素，且子作用域可定义与母作用域同名的变量、常量等，在操作时遵守就近原则
 - 已经在`main()`母作用域定义过的变量可以在另一个作用域`block`重定义，覆盖母作用域的变量值
@@ -420,44 +428,35 @@ age := [5]int{1:24,4:35}
 - 在处理相似逻辑的代码时，为防止重用共享变量而不自知，可以用`{}`对作用域进行隔离
 
 ```go
-package main
-
-import "fmt"
-
-// quantity is outside all functions, so it can be used in all functions
-var quantity int
-
-func main() {
-	quantity = 2
-	{
-		fruit := "banana"
-		fmt.Println(fruit, quantity)
+    package main
+    
+    import "fmt"
+    
+    // quantity is outside all functions, so it can be used in all functions
+    var quantity int
+    
+    func main() {
+        quantity = 2
+        {
+            fruit := "banana"
+            fmt.Println(fruit, quantity)
+        }
+        {
+            fruit := "banana"
+            fmt.Println(fruit, quantity)
+        }
+        var fruit string = "apple"
+        fmt.Printf("在main函数作用域内，fruit is %s, 一共%d个", fruit, quantity)
+        newFruit()
+    } 
+    func newFruit(){
+        quantity = 1
+        // fmt.Println("newFruit作用域内, 未重定义时，fruit is", fruit) // 报错：Unresolved reference 'fruit'
+        var fruit = "watermelon"
+        fmt.Printf("在newFruit函数作用域内，fruit is %s, 一共%d个", fruit, quantity)
     }
-	{
-		fruit := "banana"
-		fmt.Println(fruit, quantity)
-    }
-	var fruit string = "apple"
-	fmt.Printf("在main函数作用域内，fruit is %s, 一共%d个", fruit, quantity)
-	newFruit()
-} 
-func newFruit(){
-	quantity = 1
-	// fmt.Println("newFruit作用域内, 未重定义时，fruit is", fruit) // 报错：Unresolved reference 'fruit'
-	var fruit = "watermelon"
-	fmt.Printf("在newFruit函数作用域内，fruit is %s, 一共%d个", fruit, quantity)
-}
 
 ```
-
-函数在定义时，根据预期目的的不同，会有很多**变种**：
-- 只有函数名`function_name`（目的），没有参数列表`[parameter list]`（投入）、
-  返回值列表`return-value_list`（预期和产出），是单纯的函数调用，可能用于：
-  - 内容的输入输出
-  - 加载全局变量
-- 有函数名`function_name`（目的）和参数列表`[parameter list]`（投入），
-  没有返回值列表`return-value_list`（预期和产出）
-
 
 ### 🔸 `Golang`的内置函数
 
@@ -472,18 +471,130 @@ func newFruit(){
 | `make()`           | 内存分配              | 用于内置引用类型（切片、map 和管道），将类型作为参数。<br/>`new(T)`分配类型`T`的零值并返回其地址，也就是指向类型`T`的指针。 |
 | `copy()`           | 操作切片              | 复制切片，`copy(dst []Type, src []Type)`                                       |
 | `append()`         | 操作切片              | 编辑切片，增删改，`append(slice, elem1, elem2)`，`append(slice, anotherSlice...)`   |
-| `panic()`          | 错误处理              | 即使程序`panic`，`defer`函数仍然会照常调用                                              |
-| `recover()`        | 错误处理              |                                                                           |
+| `panic()`          | 错误处理              | 用于处理严重错误，使当前运行函数直接异常退出，如果异常退出没有被捕获，则会持续向上层递进，直到有捕获的地方，或`main`函数退出。        |
+| `recover()`        | 错误处理              | 用于捕获严重错误。                                                                 |
 | `print()`          | 打印                |                                                                           |
 | `println()`        | 打印                |                                                                           |
 | `complex()`        | 操作复数              |                                                                           |
 | `real()`           | 操作复数              |                                                                           |
 | `imag()`           | 操作复数              |                                                                           |
+| `defer()`          | 注册延迟调用机制          | 常用于关闭文件、重置共享变量等。常与`defer`结合使用。                                            |
+
+**<u>`defer`函数</u>** [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/012.defer/main.go)
+
+`defer`是`golang`内置的函数，是Go语言提供的一种用于注册延迟调用的机制，以用来保证一些资源被回收和释放。`defer`注册的延迟调用可以在当前函数执行完毕后执行（包括通过`return`正常结束或者`panic`导致的异常结束），后定义的`defer`先执行。
+
+在定义`defer`函数时，注意它与周围环境有哪些关联关系，与我们使用的方法和作用域严格绑定分析。
+
+> 【重点】`defer`函数的陷阱
+> 
+> ```go
+> package main
+> import ( 
+> "fmt"
+> "time"
+> )
+> // why is duration not 5 seconds?
+> func deferGuess() {
+> 	startTime := time.Now()
+> 	fmt.Println("start time:", startTime)
+> 	defer fmt.Println("duration: ", time.Now().Sub(startTime)) // in nanosecond level
+> 	time.Sleep(time.Second * 5)                                // 5 seconds
+> 	fmt.Println("finish time:", time.Now())
+> }
+> ```
+ `defer`注册的函数是逆序执行的，即**先注册后执行**，先注册进内存栈中，得到信号之后从栈内弹出，原则是先入后出。
+ 
+ 在本例中，`defer`注册的函数里的部分，即`time.Now().Sub(startTime)`会预先运行完毕（纳秒级别），准备好被打印（运行最后一层）。
+ 
+> 如何解决这个问题？>>> 利用闭包`closure`
+> 
+> 在defer函数定义时，对外部变量的引用是有两种方式的，分别是作为**函数参数**和作为**闭包**引用：
+> - 作为函数参数，则在`defer`定义时就把值传递给`defer`，并被`cache`起来
+> - 作为闭包引用的话，则会在`defer`函数真正调用时根据整个上下文确定当前的值
+> 
+> ```
+> defer func() {
+>   fmt.Println("use closure to calculate duration: ", time.Now().Sub(startTime)) // about 5 seconds
+> }()
+> ```
+> 
+
+**<u>`panic`函数</u>** [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/012.panic/main.go)
+
+`golang`内置了多种`panic`，如`nil pointer`, `index out of range`, `concurrent read/write map`等。
+
+`panic`也可以主动通过调用`panic`函数抛出。即使程序`panic`，`defer`函数仍然会照常调用。
+
+观察`goroutine`的调用栈（调用链条），从内层到外层，由近及远报错：
+```
+  panic: assignment to entry in nil map
+  
+  goroutine 1 [running]:
+  main.recoverSample(...)
+          /Users/.../gopath/src/learn.go/chapter2/012.recover/recover.go:5
+  main.main()
+          /Users/.../gopath/src/learn.go/chapter2/012.recover/main.go:4 +0x2e
+
+```
+
+**<u>`recover`函数</u>** [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/012.recover)
+
+`recover`用于捕获严重错误，它通常位于`defer`引入的函数体中，用于捕获正在运行的函数中出现的严重错误。
+
+`defer`的`recover`只能出于当前函数的调用栈中，如果脱离了当前函数的调用栈，`recover`将无法捕获：
+```go
+    package main
+    import "fmt"
+    
+    func main() {
+        recoverSample()
+    }
+    
+    func recoverSample() { 
+        // adding defer with recover will catch panic in the program
+        // with this fragment, program will not drop out automatically
+        defer func() {
+          if r := recover(); r != nil {
+              fmt.Println("fatal error discovered here:", r)
+          }
+        }()
+    
+        defer catchPanicUpgraded()
+    
+        defer catchPanic()
+    
+        var nameScore map[string]int
+        nameScore["lisa"] = 100 // panic: assignment to entry in nil map
+    
+    }
+    // catchPanic: refactor func() to get it
+    // in this case, the panic will not be caught, why?
+    // this is because when we use catchPanic, the call process of func() has escaped the running of recoverSample
+    // they are not in the same stack anymore, therefore panic error cannot be caught
+    func catchPanic() {
+        func() {
+            if r := recover(); r != nil {
+                fmt.Println("fatal error discovered:", r)
+            }
+        }()
+    }
+    
+    // upgrade it: this one will catch panic
+    func catchPanicUpgraded() {
+        if r := recover(); r != nil {
+            fmt.Println("fatal error discovered finally:", r)
+        }
+    }
+
+```
+
+> 【小结】在编写代码时，将`defer`, `panic`和`recover`相结合使用，可以写出健壮的程序。当工作中出现错误，常用它们解决。善用`debug.PrintStack()`打印调用栈，确定错误位置，在大型项目中非常实用。
 
 
-### 🔸 函数的参数与返回值 [link](https://github.com/AdaSheng07/ready.to.go/blob/e164bedc9f631503e3a19aa8e6a4fe2113e0add1/chapter2/009.function1/main.go)
+### 🔸 函数的参数与返回值 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function1/main.go)
 
-<u>**定长参数与不定长参数**</u>
+**<u>定长参数与不定长参数</u>**
 
 - 定长参数：指定具体名称、类型，使用函数的时候必须一一对应，否则报错：
 ```
@@ -504,44 +615,41 @@ func newFruit(){
   }
 ```
 
-<u>**函数调用与传递参数的方式**</u> // todo
+**<u>函数调用与传递参数的方式</u>**
+
+默认情况下，Go 语言使用的是**值传递**，即在调用过程中不会影响到实际参数。
 
 函数使用的参数可称为函数的形式参数，可理解为**预期投入**，定义在函数体内的局部变量。
 
 调用参数，可以通过两种方式来传递参数：
-- 值传递
-- 引用传递
-看传的是什么 array map interface本身就是引用，传的时候，copy的是变量，但值是原来的值
-int string是值传递
-还有指针
+- **值传递**：在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。
+- **引用传递**：在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。
 
+一个函数的参数用什么方式传递，要看这个函数传递的参数是什么类型：
+- `array`, `map`和`interface`等本身就是引用，在作为参数传递时，拷贝的是变量本身，变量变更时实际参数也跟着变更 
+- `int`, `string`是值传递，传递的是该参数的一个副本
+- 传递一个指针类型的参数，其实传递的是这个该指针的一份拷贝，而不是这个指针指向的值
 
-调用函数，可以通过两种方式来传递参数：
-值传递	值传递是指在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。
-引用传递	引用传递是指在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。
-默认情况下，Go 语言使用的是值传递，即在调用过程中不会影响到实际参数。
-
-<u>**递归**</u> [link]() 
+**<u>递归</u>** [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/010.iteration1/main.go) 
 
 如果一个函数的调用链中存在自己调用自己，则将这种调用方式称为递归。以斐波那契数列计算核心为例：
 ```go
-  package main
-  func fibonacci(n int) int{
-      if n==0 {
-          return 0
-      }
-      if n==1 {
-          return 1
-      }
-      return fibonacci(n-1)+fibonacci(n-2)
-  }
+    package main
+    func fibonacci(n int) int{
+        if n==0 {
+            return 0
+        }
+        if n==1 {
+            return 1
+        }
+        return fibonacci(n-1)+fibonacci(n-2)
+    }
 ```
-运用递归时，注意要整个函数需要退出条件与机制，否则函数将无止境地递归调用运行下去。先分析好终止条件，再判断处理细节。
+运用递归时，注意要整个函数需要退出条件与机制，否则函数将无止境地递归调用运行下去。先分析好**终止条件**，再判断处理细节。
 
-<u>**返回值**</u>
+**<u>返回值</u>**
 
-在编写代码时，强烈建议**命名返回值**。  
-- 为返回值添加名称
+在编写代码时，强烈建议**命名返回值**：
 ```
   func function_name([parameter list])(return_value_name return_value_type){
       function body
@@ -554,13 +662,13 @@ int string是值传递
   - 对返回值进行命名就可以简化理解过程，快速知道函数的目的和预期产出。
   - 代码提示信息即可告知具体参数及其意义。
 
-### 🔸 将函数作为参数与返回值 [link]()
+### 🔸 将函数作为参数与返回值 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function2/main.go)
 
-<u>**提取函数并重构**</u>
+**<u>提取函数并重构</u>**
 - 选取函数片段 -> Refactor -> Extract Method...
 - 函数重命名：Refactor -> Rename
 
-<u>**使用函数**</u>
+**<u>使用函数</u>**
 
 - 一个函数在定义后，`Golang`支持将该函数作为形式参数传入另一个函数。
 - 被传入函数有时也称作**回调函数(callback function)**。
@@ -575,35 +683,35 @@ int string是值传递
   import "fmt"
   
   func main() {
-    var age int
-    var fatRate float64
-    var isMale bool
-    var result string
-    // ...
-    if isMale {
-      result = getFinalFatState(age, fatRate, getFinalFatStateForMale)
-    } else {
-      result = getFinalFatState(age, fatRate, getFinalFatStateForFemale)
-    }
-    fmt.Println(result)
+      var age int
+      var fatRate float64
+      var isMale bool
+      var result string
+      // ...
+      if isMale {
+          result = getFinalFatState(age, fatRate, getFinalFatStateForMale)
+      } else {
+          result = getFinalFatState(age, fatRate, getFinalFatStateForFemale)
+      }
+      fmt.Println(result)
   }
   
   func getFinalFatState(age int, fatRate float64, getSuggestion func(age int, fatRate float64) string) string {
-    return getSuggestion(age, fatRate)
+      return getSuggestion(age, fatRate)
   }
   
-  func getFinalFatStateForMale(age int, fatRate float64) string {
-    // ...
-    return "This man's healthiness state is ..."
+  func getFinalFatStateForMale(age int, fatRate float64) string { 
+      // ... 
+      return "This man's healthiness state is ..."
   }
   
-  func getFinalFatStateForFemale(age int, fatRate float64) string {
-    // ...
-    return "This woman's healthiness state is ..."
+  func getFinalFatStateForFemale(age int, fatRate float64) string { 
+      // ... 
+      return "This woman's healthiness state is ..."
   }
 ```
 
-<u>**将函数作为返回值（方法）**</u>
+**<u>将函数作为返回值（方法）</u>**
 
 用一个函数来返回另一个函数，可以生成一个工具去做计算或是加工已有的计算，根据需求进行定制：
 ```
@@ -615,13 +723,72 @@ int string是值传递
   }
 ```
 
-更多使用方法参考闭包(`closure`) //todo
+更多使用方法请参考闭包(`closure`) 。
 
-### 🔸 函数作为特殊变量 [link]()
+**<u>闭包`closure`</u>** [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/011.closure)
+
+闭包是函数与其相关的引用环境组成的实体。一个函数和对其**周围状态（又称上下文）的引用捆绑**在一起，这样的组合成为闭包（`closure`）。闭包可以让我们在一个**内层函数中访问到其外层函数的作用域**。
+
+在操作上，闭包是一种用于保存函数和环境的记录。环境记录关联性的映射，将函数的每个自由变量与创建闭包时所绑定名称的值或引用相关联。环境决定了函数的特殊性与闭包的特性。
+
+分析函数运行时，重点关注的函数本身及其上下文，比如使用的变量、调用的方法、`golang`的值传递等。闭包函数变量在被定义的时候，与哪些变量产生了关联，在闭包方法被调用运行时，闭包方法会回到当初被定义的位置，与原来的环境/周围状态/上下文发生互动，得到执行的最终结果。
+
+```go
+    package main
+    
+    import (
+      "fmt"
+    )
+    
+    var times int
+    
+    // what if we return a function defined in another function body 
+    // and using variables outside its scope?
+    func calcSumFunc() func(nums ...int) {
+        var sum int
+        var weightedSum float64
+        weight := 0.5
+        return func(nums ...int) {
+            for _, value := range nums {
+                sum += value
+            }
+            weightedSum = float64(sum) * weight
+            times++
+            fmt.Println(sum, weightedSum)
+        }
+    }
+    
+    func main() { 
+        // a function variable is declared to calcWeightedSum, calcWeightedSum is a closure
+        // calcWeightedSum keeps its citation to weight, sum and times.
+        // weight, sum and times seems to escape, but their life cycles have not ended yet
+        calcWeightedSum := calcSumFunc()
+        calcWeightedSum(1, 2, 3, 4, 5, 6, 7, 8, 9) // 45 22.5
+        calcWeightedSum(1, 2, 3, 4, 5, 6, 7, 8, 9) // 90 45
+        calcWeightedSum(1, 2, 3, 4, 5, 6, 7, 8, 9) // 135 67.5
+        calcWeightedSum(1, 2, 3, 4, 5, 6, 7, 8, 9) // 180 90
+        calcWeightedSum(1, 2, 3, 4, 5, 6, 7, 8, 9) // 225 112.5
+        calcWeightedSum(1, 2, 3, 4, 5, 6, 7, 8, 9) // 270 135
+        fmt.Println(times)                         // 6
+        // here we call calcSumFunc for another five times
+        // they return five closures, they cite different sums and weights (even though they have the same values)
+        // times still accumulates because it is a global variable
+        calcSumFunc()(1, 2, 3, 4, 5, 6, 7, 8, 9) // 45 22.5
+        calcSumFunc()(1, 2, 3, 4, 5, 6, 7, 8, 9) // 45 22.5
+        calcSumFunc()(1, 2, 3, 4, 5, 6, 7, 8, 9) // 45 22.5
+        calcSumFunc()(1, 2, 3, 4, 5, 6, 7, 8, 9) // 45 22.5
+        calcSumFunc()(1, 2, 3, 4, 5, 6, 7, 8, 9) // 45 22.5
+        fmt.Println(times)                       // 11
+    }
+```
+
+闭包最主要的意义在于缩小变量的作用域，减少对全局变量的污染，同时可以增加方法的灵活性和自由度。
+
+### 🔸 函数作为特殊变量 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function3/main.go)
 
 函数除了单独定义外，还可以作为变量使用，变量类型是**方法**。该变量可以作为方法调用来使用。函数变量可以这样定义：
 ```
-  var function_name func([parameter list]) (return value list)
+    var function_name func([parameter list]) (return value list)
 ```
 函数变量在赋值时有条件：
 - 变量类型不能变，函数**只能作为函数**来使用，
@@ -636,34 +803,31 @@ int string是值传递
       function body: executive statements
   }
 ```
-<u>什么情况下使用匿名函数？</u>
+> 【应用】什么情况下使用匿名函数？
+> 
+> 对于只用到一次，不会重复使用的函数，不需要命名，在定义函数之后立即使用；还可以作为回调函数使用：
+> 
+> ```
+> 1. use anonymous functions just after declaration
+> 
+> func([parameter list]) (return_value_list) {
+> function body: executive statements
+> }([parameter list])
+> 
+> 2. use anonymous functions as callback functions
+> 
+> func function_name_1([parameter list 1], function_name_2 func([parameter list 2])(return_value_list_2))(return_value_list_1){
+> function body: executive statements
+> }
+> func main() {
+> function_name_1([parameter list 1], func([parameter list 2])(return_value_list_2){
+> function body: executive statements
+> })
+> }
+> ```
+>
 
-对于只用到一次，不会重复使用的函数，不需要命名，在定义函数之后立即使用；还可以作为回调函数使用：
-
-```
-  1. use anonymous functions just after declaration
-  
-  func([parameter list]) (return_value_list) {
-      function body: executive statements
-  }([parameter list])
-  
-  2. use anonymous functions as callback functions
-  
-  func function_name_1([parameter list 1], function_name_2 func([parameter list 2])(return_value_list_2))(return_value_list_1){
-      function body: executive statements
-  }
-  func main() {
-      function_name_1([parameter list 1], func([parameter list 2])(return_value_list_2){
-          function body: executive statements
-      })
-  }
-```
-
-### 🔸 特殊函数 [link]()
-
-**`defer`函数** //todo
-
-`defer`函数
+### 🔸 特殊函数 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function4/main.go)
 
 **`init`函数**
 
@@ -675,10 +839,16 @@ int string是值传递
 
 
 **Appendix**
+
 ☞   [Go 语言向函数传递数组](https://www.runoob.com/go/go-passing-arrays-to-functions.html)  
+☞   [Go语言参数传递是传值还是传引用](https://www.flysnow.org/2018/02/24/golang-function-parameters-passed-by-value.html)  
 ☞   [Go 语言函数](https://www.runoob.com/go/go-functions.html)  
 ☞   [Go语言将函数作为返回值](http://c.biancheng.net/view/4781.html)  
-☞   [回调函数和闭包](https://www.cnblogs.com/f-ck-need-u/p/9878898.html)
+☞   [回调函数和闭包](https://www.cnblogs.com/f-ck-need-u/p/9878898.html)  
+☞   [Go 语言闭包详解](https://www.sulinehk.com/post/golang-closure-details/)  
+☞   [golang中的闭包的意义和用法](https://blog.csdn.net/jason_cuijiahui/article/details/84720411)  
+☞   [Golang之轻松化解defer的温柔陷阱](https://segmentfault.com/a/1190000018169295)
+
 
 ## 包
 ## 函数方法论
