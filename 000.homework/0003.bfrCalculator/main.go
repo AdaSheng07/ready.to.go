@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	gobmi "github.com/armstrongli/go-bmi"
 	"github.com/spf13/cobra"
-	"learn.go.tools"
 )
 
 func main() {
@@ -15,20 +15,25 @@ func main() {
 		age    int
 	)
 	cmd := cobra.Command{
-		Use:   "calcBFR",
+		Use:   "CheckHealthyStatus",
 		Short: "A body fat rate calculator based on BMI value.",
 		Long: "Given a person's name, gender, height, weight and age, calculate this person's BMI and BFR. \n" +
 			"Based on this person's gender and age, set up the BFR benchmark for this person. \n" +
 			"Check for this peron's healthy status and give out specialized suggestions.",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("name:", name)
-			fmt.Println("gender:", gender)
-			fmt.Println("height:", height)
-			fmt.Println("weight:", weight)
-			fmt.Println("age:", age)
+			fmt.Println("Name:", name)
+			fmt.Println("Gender:", gender)
+			fmt.Println("Height(m):", height)
+			fmt.Println("Weight(kg):", weight)
+			fmt.Println("Age:", age)
 
-			bmi, bfr := learn_go_tools.CalcBfr(age, gender, weight, height)
-			fmt.Println("bmi:", bmi, "\nbfr:", bfr)
+			// calculate bmi & bfr
+			bmi, _ := gobmi.CalcBMI(weight, height)
+			bfr := gobmi.CalcBFR(bmi, age, gender)
+			fmt.Printf("BMI: %.2f%%\nBFR: %.2f%%\n", bmi, bfr*100)
+
+			// healthiness assessment & suggestions
+			gobmi.GiveOutSuggestions(bfr, gender, age)
 		},
 	}
 	cmd.Flags().StringVar(&name, "name", "", "input name")
