@@ -849,15 +849,380 @@ age := [5]int{1:24,4:35}
 ☞   [golang中的闭包的意义和用法](https://blog.csdn.net/jason_cuijiahui/article/details/84720411)  
 ☞   [Golang之轻松化解defer的温柔陷阱](https://segmentfault.com/a/1190000018169295)
 
+## 🔶 包 `package`
 
-## 包
-## 函数方法论
+像之前我们常用的`fmt`与`math`都是 Go 语言中的内置包，它们被称为标准库。`fmt`提供了格式化输入输出功能，`math`提供了基本的数学函数。
+
+包是在同一个目录（或文件夹）下的、总是一起编译、使用的一组源文件的集合。  
+
+为什么要用包？
+
+- 更好地管理项目模块、功能：分工负责处理外部调用/做业务逻辑计算、转换等/存储...
+- 实现同名方法、变量等：同名不同包  
+  ![image](https://github.com/AdaSheng07/ready.to.go/blob/486e5b1d933ec33a70e5c483a9ccefc05a72e11a/pics/package_1.png)
+- 控制访问范围（又称"作用域"）：比如处于整个包中的全局变量，在其它包中还是不可见的
+
+### 🔸 包的可访问性
+
+在同一个包中，所有的函数、变量、常量、对象等都是可见的（visible）。e.g. 在一个文件夹`011.closure`中，定义在`go`文件`closure.go`中的变量、函数等是可以在`main.go`中可见并使用的。在`main.go`中定义的变量、函数等，在同文件夹下的其它`go`文件中可以直接使用。
+
+在不同的的包中，只有公开的（public）函数、变量、常量、对象等是可见的（visible）。在 Golang 中凡是以大写字母开头的，就是公开的，以非大写字母开头的，就是未导出的函数功能`unexported function usage`，非公开/私有的/不可用的（锁）。
+
+根据函数是否可以访问，分为公有（public）和私有（private）两种：
+- **公有（public）**：可以被其它包访问的函数、变量。以大写字母开头的函数是公有函数、公有变量。
+- **私有（private）**：只能在当前包访问的函数、变量。不是大写字母开头的函数均为私有函数、私有变量。
+
+可以用外接插口来类比理解公有/私有：
+
+PC外接插口有USB口、电源口、HDMI口（显示器口）、SD Card口，而PC内部的插槽可能还有内存插槽、PCIe、SATA、CPU插槽等，对于内部的组装不可见，我们并不感兴趣，我们只需要使用可见的外接插口。
+
+再比如MacBook的外接插口是USB-C，而内部插槽（或焊接位）也有内存插槽、PCIe、CPU插槽（或焊接位）等，对内的组装不可见，对外可见的接口统一为USB Type-C。
+
+### 🔸 包函数的使用
+
+编辑器`GoLand`会自动扫描`module`路径名称下的所有文件、函数和方法等，在使用时会自动提示导入包。如果要使用非本package（包）中的函数，必须：
+- 导入要使用的包
+  ```
+  import "<package name>"
+    package name=<module path>+<directory>
+  ```
+- 调用包内的函数
+  ```
+  <package name>.<function name>
+  ```
+
+### 🔸 包的初始化
+
+`init`函数在包`package`被引用（import）时会被调用，`init`函数可以做包的初始化。比如：全局变量的初始化、注册、预先计算等。
+
+通过使用特殊符号——`_`（下划线），可以做到纯初始化调用。
+
+在 Golang 中，`_`是一个特殊的符号：
+- 作为变量时，表示不定义具体对象的变量
+- 作为形式参数时，表示一个不存在的形式参数，无法使用
+- 作为包引用时，表示这个包不需要被调用，但它是项目的需要，在import时可以用`_`，不至于因为未使用此包在保存go文件时删除这条import  
+  ![image](https://github.com/AdaSheng07/ready.to.go/blob/70dc6ec01604a13625abf6d7fb941619a1899b1e/pics/package_2.png)
+
+### 🔸 扩展当前包
+
+有时候为了简化调用，可以将要引用的包作为当前包的扩展包引用进来，从来可以像使用当前包的函数一样使用引用包的函数：
+
+  ```go
+    package main
+    import (
+		"fmt"
+		."fmt"
+    )
+    func main() {
+		Println("asdf")
+		fmt.Println("1234")
+    }
+  ```
+>【注意】
+> - 同一个包中函数名称、变量名称不能重名 
+> - 扩展包中的函数不可控
+
+### 🔸 包别名
+
+在引用包的时候，有时会遇到引用的多个包名称相同（哪怕是不同文件夹名，以包名称为准）的情况，这时需要使用别名来进行区分。有时也通过别名来简化引用：
+```
+import (
+    "fmt"
+    "learn.go/utils"
+    c02 "learn.go/chapter02/utils"
+    c03 "learn.go/chapter03/utils"
+) 
+func main() {
+    c02.Cacl()
+    c03.Calc()
+    fmt.Println(...)
+}
+```
+
+## 🔶 Go Module
+
+### 🔸 初识 Go Module
+
+Go Module是 Golang 官方提供的依赖管理方案。一个 Go Module 代表一个独立的、可使用的模块。
+
+``` 
+  module xxxx   // 定义module的名称
+  go 1.17       // 定义golang的版本，不同版本的module行为上略有区别，但核心规则是相同的
+```
+**初始化Go Module**
+
+Golang 官方提供初始化 Go Module 命令行`$ go mod init[module path]`:
+
+![image](https://github.com/AdaSheng07/ready.to.go/blob/09f176695bdfb9dc6011264a1036c71d10a0e79f/pics/module_1.png)
+
+- `[module path]`为可选参数，但当其不是在`$GOPATH/src`文件夹中时，必须指定。`[module path]`会被默认为`module`的名称。
+- 在`$GOPATH/src`文件夹中时，可以不指定，默认会以相对于`src`文件夹的路径。
+- 生成的`go.mod`文件中不包含 Golang 官方包。
+
+### 🔸 Go Module 实战例题
+
+如果需要利用从命令行传入的数据进行计算，可以使用`os.Args`：
+  ```
+  var (
+      name   string
+      sex    string
+      height string // float64
+      weight string // float64
+      age    string // int
+  )
+  arguments := os.Args
+  fmt.Println(arguments)
+  ```
+在这里，`arguments`是一个切片`slice`，在编辑配置给出数据后，打印的`arguments`如下：
+  ```
+  [/private/var/folders/7l/pnr12b8962l7dwhrxxzjd9500000gn/T/GoLand/___go_build_learn_go_chapter2_014_bfrCmdCalculator 小强 男 1.7 70 35]
+  name:  小强
+  sex:  男
+  height:  1.7
+  weight:  70
+  age:  35
+  ```
+由此可知，切片`arguments`的第一个元素是 go 文件本身，传入的数据索引从`1`开始，而且数据必须严格按照顺序传入，且所有录入数据的格式都是`string`，需要手动转换，这样的程序明显健壮性不足。
+
+如何改进？
+
+我们当然可以写一个说明文档，解释传入数据的方法和要求，但更简洁的方法是参照`git`的命令行语句，用不同的参数执行不同的功能。
+
+**引用第三方包**
+
+在引入第三方包时，如果此包本地从未缓存过，可以先定义一个别名为"`_`"的引用，然后运行`go mod tidy`来让系统初始化引入的第三方的包，然后再使用。
+
+比如，这里我们引入`cobra`：
+  ```
+  import (
+      _ "github.com/spf13/cobra"
+  )
+  ```
+再在`Terminal`的`go.mod`文件路径下执行`go mod tidy`完成配置：
+  ```
+  $ go mod tidy
+  go: finding module for package github.com/spf13/cobra
+  go: downloading github.com/spf13/cobra v1.3.0
+  go: found github.com/spf13/cobra in github.com/spf13/cobra v1.3.0
+  go: downloading github.com/inconshreveable/mousetrap v1.0.0
+  go: downloading github.com/spf13/pflag v1.0.5
+  ```
+
+> 【注意】这里`github.com/spf13/cobra`是第三方包的路径，`cobra`是目录下的文件名，并不是包的名称。`control/command` + 左键点击可以`goto`自动跳转至文件目录下进行查看项目正在依赖的包，打开其中的 go 文件可以查看包的名称，大部分开源社区的 module 文件名与包名都是一致的。
+>
+> ![image](https://github.com/AdaSheng07/ready.to.go/blob/ab8d28ec0c11cd5b153f96f0baba3f7e133aed07/pics/package_3.png)
+
+**使用第三方依赖包**
+
+利用`cobra`包中的`Command`功能传入计算，替代原代码中的`os.Args`。定义其中需要的变量，以及命令行参数需要的命令行对象：
+  ```
+  func main() {
+      var (
+          name   string
+          sex    string
+          height float64
+          weight float64
+          age    int
+      )
+      cmd := cobra.Command{
+          Use:   "bfrCheck",    // use: set a name for this command
+          Short: "基于BMI的体脂计算器", // short: a short description for this command
+          // long: a detailed explanation for this command
+          Long: "录入姓名、性别、身高、体重和年龄，计算他们的BMI值，基于他们的性别和年龄生成他们的体脂率标准，判断他们的体脂率处于偏瘦/标准/偏胖/严重肥胖并给出健康建议。",
+          // func is a registered callback function, Run is the main body of cmd, custom-made as desired
+          Run: func(cmd *cobra.Command, args []string) {
+              fmt.Println("name: ", name)
+              fmt.Println("sex: ", sex)
+              fmt.Println("height: ", height)
+              fmt.Println("weight: ", weight)
+              fmt.Println("age: ", age)
+              // calculate bmi & bfr...
+              
+              // healthiness assessment & suggestions
+              
+          },
+      }
+  ```
+利用`Flags()`配置需要的各参数：
+  ```
+      /*
+          func (f *FlagSet) StringVar(p *string, name string, value string, usage string)
+          StringVar defines a string flag with specified name, default value, and usage string.
+          The argument p points to a string variable in which to store the value of the flag.
+      */
+      cmd.Flags().StringVar(&name, "name", "", "姓名")
+      // this means: when we type in command line, what comes after "name" will be saved in variable name as string.
+      // if we give nothing after "name", the variable name will be the default value "".
+      cmd.Flags().StringVar(&sex, "sex", "", "性别")
+      cmd.Flags().Float64Var(&height, "height", 0, "身高")
+      cmd.Flags().Float64Var(&weight, "weight", 0, "体重")
+      cmd.Flags().IntVar(&age, "age", 0, "年龄")
+  ```
+在`main()`增加语句运行已定义的命令行对象：
+  ```
+  cmd.Execute()
+  ```
+在`Terminal`运行程序得到：
+  ```
+  $ go run ./main.go
+  name:  
+  sex:  
+  height:  0
+  weight:  0
+  age:  0
+  ```
+通过命令行的帮助选项查看配置与使用方法：
+  ```
+  $ go run ./main.go --help
+  录入姓名、性别、身高、体重和年龄，计算他们的BMI值，基于他们的性别和年龄生成他们的体脂率标准，判断他们的体脂率处于偏瘦/标准/偏胖/严重肥胖并给出健康建议。
+  
+  Usage:
+    bfrCheck [flags]
+  
+  Flags:
+        --age int        年龄
+        --height float   身高
+    -h, --help           help for bfrCheck
+        --name string    姓名
+        --sex string     性别
+        --weight float   体重
+  ```
+通过命令行对象，我们可以实现乱序输入，并且数据格式会自动转换。实际使用方法为：
+  ```
+  $ go run ./main.go --age 35 --name 小强 --weight 70 --height 1.70 --sex 男
+  name:  小强
+  sex:  男
+  height:  1.7
+  weight:  70
+  age:  35
+  ```
+在命令行对象的`Run`的主体函数中，我们也可以调用其它包的函数完善其它功能。比如：
+  ```
+  // calculate bmi & bfr...
+  bmi := calc.CalcBMI(height, weight)
+  bfr := calc.CalcBFRUpgrade(bmi, age, sex)
+  fmt.Println("Body Fat Rate:", bfr)
+  ```
+在`Terminal`中运行后得到的结果：
+  ```
+  $ go run ./main.go --age 35 --name 小强 --weight 65 --height 1.70 --sex 男
+  name:  小强
+  sex:  男
+  height:  1.7
+  weight:  65
+  age:  35
+  Body Fat Rate: 0.18489619377162636
+  ```
+
+> 【总结】在使用第三方依赖包时，先定位需要使用的某个工具，导入（巧用"`_`"技巧）后`go mod tidy`拉取需要的缺少的模块，移除不用的模块。
+> ```
+> Usage:
+>
+>    go mod <command> [arguments]
+>
+> The commands are:
+>
+>    download    download modules to local cache
+>    edit        edit go.mod from tools or scripts
+>    graph       print module requirement graph
+>    init        initialize new module in current directory
+>    tidy        add missing and remove unused modules
+>    vendor      make vendored copy of dependencies
+>    verify      verify dependencies have expected content
+>    why         explain why packages or modules are needed
+>
+> Use "go help mod <command>" for more information about a command.
+> ```
+
+### 🔸 Go Module 进阶
+
+**Module 的使用**
+
+- 像普通的包一样直接使用函数
+- 编写代码时，会遇到找不到`package`、`function`的错误，一些较老的项目无法使用 Go Module，这时需要运行：
+  ```
+  go get <package> // as updated in golang 1.17
+  go mod tidy
+  ```
+- 像正常一样使用代码
+- 如果在 VS Code 中打开项目，注意`go.mod`文件务必位于 VS Code 锁打开文件夹的位置（golang 1.17），GoLand 中不存在这个问题
+- 运行`go mod tidy`来保证项目中使用到的 go modules 被包含在项目依赖中
+
+**Go Module 替换（replace）**
+
+Go Module 替换（replace）是用另一个实现替换默认要使用的实现，类似于"狸猫换太子"。一般使用的场景有：
+- 默认`go mod tidy`出来的都是最新版本，如果最新版本不合适，或不能使用等，需要将其替换为相对旧一些的版本。比如：
+  ```
+  replace github.com/spf13/cobra => github.com/spf13/cobra v1.2.0
+  ```
+- upstream代码（上游代码库）不太符合我们的需求，我们可以在此基础上做自身的定制，并开源在`git`服务上，需要将`module`重定向。在 Golang 中永远都是从源码出发的，可以直接从实现出发来使用。
+- 本地有些项目的代码，没有`git`支持，需要作为独立的`module`使用。比如：
+  ```
+  replace learn.go.tools => ../learn.go.tools
+  ```
+> 【注意】本地项目代码作为`module`替换：
+> 1. 替换的是`module`，寻找的是替换后的`go.mod`所在的路径位置**相对**于原来的`go.mod`所在文件夹的位置。
+> 2. 可以通过`Terminal`验证`replace`时的重定向路径是否存在和正确，保证`module`能够成功`replace`。
+> 3. `replace`之后的版本一定被使用。
+
+> 【常见问题】使用`go mod`时报错`i/o timeout`
+>
+>      解决办法是在执行前在`Terminal`中设置环境变量：
+>   ```
+>   $ export GO111MODULE=on
+>   $ export GOPROXY=https://goproxy.io 
+>   或
+>   $ export GO111MODULE=on
+>   $ export GOPROXY=https://goproxy.cn
+> 
+>   对于Golang 1.13及以上版本，还可以：
+>   $ go env -w GOPROXY=https://goproxy.cn
+>   ```
+
+### 🔸 Vendor
+
+Vendor 是把项目`module`定义的所有依赖制作一个副本保存在项目的`vendor`目录。可以理解为：将项目定义的依赖做一个**快照**并保存下来，避免项目依赖的变更影响项目的一致性。Vendor 是几乎所有大型项目中都会使用的，稳定性强，保证项目的一致性。
+
+Go Module 深度支持`vendor`，通过在`go.mod`所在目录下运行命令行`go mod vendor`将项目的依赖保存到`vendor`中：
+  ```
+  $ go mod vendor
+  $ go mod vendor -v
+  # github.com/inconshreveable/mousetrap v1.0.0
+  ## explicit
+  github.com/inconshreveable/mousetrap
+  # github.com/spf13/cobra v1.3.0
+  ## explicit; go 1.15
+  github.com/spf13/cobra
+  # github.com/spf13/pflag v1.0.5
+  ## explicit; go 1.12
+  github.com/spf13/pflag
+  ```
+Go Module 的定义与 `vendor`本身就是**共存**的，通过`go build/run`的命令行选项来控制`-mod=<vendor|mod|readonly>`：
+- `vendor`——使用`vendor`中的依赖编译项目
+- `mod`——使用`go module`定义的依赖编译项目，并且会自动更新`go.mod`定义
+- `readonly`——使用`go module`定义的依赖编译项目，并且不做任何依赖的升级
+
+> 【注意】`vendor`目录存在/不存在：
+> 1. 项目中如果有`vendor`目录，在编译时默认使用`vendor`提供的依赖，如果在`Terminal`中运行了`go mod tidy`后，必须要再运行`go mod vendor`才能使依赖生效
+> 2. 如果没有`vendor`目录，在编译时默认使用`readonly`
+> 3. 在开发时最好先将目录中的`vendor`目录删除，在最后提交代码前再对`go.mod`文件执行`go mod vendor`
+
+## 🔶 函数方法论
+
+### 🔸 整洁代码的价值
+
+### 🔸 方法、函数内部
+
+### 🔸 方法、函数之间
 
 ## 🔵 Module 2 Practice Collection
 
 ### 🔹 函数
 
-> **Q1** 在同一个 Go 文件里能创建同名的函数吗？如果能，会发生什么问题？如果不能，怎么在同一个大项目中创建相同名字的函数？
+> **Q1** 在同一个 Go 文件里能创建同名的函数吗？如果能，会发生什么问题？如果不能，怎么在同一个大项目中创建相同名字的函数？能否用一个文件包含整个项目？
+> 
+>> 除了`init`函数，其他函数均不能同名，不能在同一个文件或包中定义同名函数。  
+>> 从理论上，可以用一个文件夹包含整个项目，但非常困难。如果在一个包中包含所有的项目文件，在做检测或关注某个功能时，会迷失在每个细节中。
 
 > **Q2** 利用递归实现一个汉诺塔问题的求解。
 
@@ -866,6 +1231,120 @@ age := [5]int{1:24,4:35}
 > <br>方法 2：每次排除一半的数字
 > 
 >      [>>  How to Guess a Number?](https://github.com/AdaSheng07/ready.to.go/blob/53b015ce07ec17420d0ef971174a67fb5df70657/chapter2/010.iteration2/main.go)
+
+
+### 🔹 包
+
+> **Q1** 我们已经学会引用我们自己的 module 中的包、方法，怎么使用其他人开发的，或者说开源社区
+的 module 呢？
+
+### 🔹 Go Module
+
+> **Q1** Go Module 实战：让体脂计算器接受从命令行传入的姓名、性别、身高、体重、年龄，直接计算其体脂并给出结果。
+
+> **Q2** Go Module 管理依赖已经很完善，是不是只要使用了 Go Module 就万无一失？
+>> 不是万无一失：
+>> - Go Module 完全依赖`git`服务，与`git`上的`branch`、`release tag`紧密相关。`Git`服务不属于 Go Module 的管理范畴。
+>> - `Git`上的`branch`、`release tag`可以随时被删除、重写
+>> - Go Module在依赖不改变时是可靠的，但在依赖改变时就不再可靠了
+>>
+>> 对项目的影响：
+>> - 项目可能因为`git`服务的变更而无法编译
+>> - 编译出来的程序行为不一致
+> 
+> 如何用一种更可靠、稳定的方式来管理依赖项目呢？如何保证不同使用者编译、运行相同程序的行为一模一样？
+> -> 引入`Vendor`
+
+> **Q3** 使用GitHub上的公有函数来实现功能，重写BMI和体脂计算器，用`module replace`替换GitHub上的，并使用`vendor`为项目依赖提供保障。
+
+****
+
+# 🟡 <u>Module 3</u>
+
+## 🔶 异常处理
+
+异常是畅叙没有按照预期运行的统称，可能是因为输入错误，也有可能是程序本身设计上的缺陷、代码上的漏洞导致的。
+
+常见的异常有：
+- 除0
+- 索引`index`错误：切片、数组等的更新编辑操作
+- 溢出：e.g. 永久调用的递归，内存溢出
+- 空指针：e.g. `*int`未赋值；未实例化的`map(nil)`
+- 类型转换失败：
+    ```go
+      package main
+      
+      import "fmt"
+      
+      func main() {
+          convertTypes()
+      }
+      
+      func convertTypes() {
+          var a interface{}
+          a = "convert a"
+          b := a.(int)
+          fmt.Println(b)
+      }
+      
+      // panic: interface conversion: interface {} is string, not int
+    ```
+- 并发读写`bug`
+- 管道相关  
+...
+
+### 🔸 处理异常
+
+1. 暴露错误  
+   在编程时，要及时暴露错误，而不是忽略它们。  
+   错误可能的来源有：
+   - 主动暴露的错误：`panic`,`error`
+   - 调用其它函数（非当前函数）返回的错误：这种错误是可预测的，需要尽快暴露错误并结束当前函数运行，而非忽略它们。
+
+2. 处理错误  
+   当调用其它函数（非本函数）时，如果返回有错误`error`，务必处理错误，不可轻易忽略。常见做法是返回错误信息：
+    ```go
+    package main
+    
+    import "fmt"
+    
+    func main() {
+        gender, weight, err := inputInfo()
+        fmt.Printf("gender: %s\n", gender)
+        fmt.Printf("weight: %.2f\n", weight)
+        fmt.Println(err)
+    }
+    
+    func inputInfo() (sex string, weight float64, err error) {
+        sex = ""
+        weight = 0
+        fmt.Print("input your gender: ")
+        _, _ = fmt.Scanln(&sex)
+        if sex != "male" && sex != "female" {
+            err = fmt.Errorf("gender: %s is neither male nor female", sex)
+            return
+        }
+        fmt.Print("input your weight: ")
+        _, _ = fmt.Scanln(&weight)
+        if weight <= 10 || weight > 200 {
+            err = fmt.Errorf("weight: %.2f is out of range", weight)
+            return
+        }
+        return
+    }
+    ```
+3. 抓住错误  
+   在程序运行时，有一类错误是无法预测的错误，它们不是主动返回的`error`，而是直接以`panic`的当时出现，直接熬制应用程序崩溃，尤其是在使用了不可控的第三方函数，或使用没有进行完整测试、校验的代码。这种错误**必须**被抓组，避免整个程序崩溃退出。  
+   像除0、索引`index`错误、溢出、空指针、类型转换失败、并发读写、管道操作错误等都属于这种类型的错误。  
+   抓住这种错误的方式是在函数题重新定义`defer`方法，并在方法中使用`recover`来捕获这类异常，比如：
+```go
+
+```
+
+
+
+
+
 
 
 
