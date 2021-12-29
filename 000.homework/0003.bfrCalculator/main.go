@@ -27,10 +27,9 @@ func main() {
 			fmt.Println("Weight(kg):", weight)
 			fmt.Println("Age:", age)
 
-			// calculate bmi & bfr
+			// calculate bmi & bfr and print them out
 			bmi, _ := gobmi.CalcBMI(weight, height)
 			bfr := gobmi.CalcBFR(bmi, age, gender)
-			fmt.Printf("BMI: %.2f%%\nBFR: %.2f%%\n", bmi, bfr*100)
 
 			// healthiness assessment & suggestions
 			gobmi.GiveOutSuggestions(bfr, gender, age)
