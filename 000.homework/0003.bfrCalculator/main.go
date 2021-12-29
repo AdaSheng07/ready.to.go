@@ -31,7 +31,7 @@ func main() {
 			bmi, _ := gobmi.CalcBMI(weight, height)
 			bfr := gobmi.CalcBFR(bmi, age, gender)
 
-			// healthiness assessment & suggestions
+			// healthiness assessment & suggestions and print them out
 			gobmi.GiveOutSuggestions(bfr, gender, age)
 		},
 	}
