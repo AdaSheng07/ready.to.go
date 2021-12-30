@@ -27,7 +27,7 @@ func main() {
 			fmt.Println("weight: ", weight)
 			fmt.Println("age: ", age)
 
-			// calculate bmi & bfr...
+			// calculate bmi & calculator...
 			bmi := calc.CalcBMI(height, weight)
 			bfr := calc.CalcBFRUpgrade(bmi, age, sex)
 			fmt.Println("Body Fat Rate:", bfr)

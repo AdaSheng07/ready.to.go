@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/armstrongli/go-bmi v0.0.1
+	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/cobra v1.3.0
 )
 

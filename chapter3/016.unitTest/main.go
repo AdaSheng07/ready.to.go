@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"learn.go/chapter3/015.errorExposure2/bfr"
+	"learn.go/chapter3/016.unitTest/calculator"
 	"runtime/debug"
 )
 
 func main() {
 	defer recoverMainBody()
 
-	name, gender, height, weight, age, err := bfr.InputInfo()
+	name, gender, height, weight, age, err := calculator.InputInfo()
 	fmt.Printf("Your input:\nname:%s\n", name)
 	fmt.Printf("gender(male/female): %s\n", gender)
 	fmt.Printf("height: %.2f\n", height)
@@ -17,7 +17,7 @@ func main() {
 	fmt.Printf("age: %d\n", age)
 	fmt.Println("error:", err)
 
-	fatRate, err := bfr.CalcBFR(height, weight, age, gender)
+	fatRate, err := calculator.CalcBFR(height, weight, age, gender)
 	if err != nil {
 		fmt.Println("warning: calculator is wrongly calculated, stop this procedure", err)
 	} else if fatRate <= 0 {

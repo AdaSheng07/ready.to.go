@@ -953,7 +953,7 @@ Go Module是 Golang 官方提供的依赖管理方案。一个 Go Module 代表�
 
 Golang 官方提供初始化 Go Module 命令行`$ go mod init[module path]`:
 
-![image](https://github.com/AdaSheng07/ready.to.go/blob/09f176695bdfb9dc6011264a1036c71d10a0e79f/pics/module_1.png)
+[!image](https://github.com/AdaSheng07/ready.to.go/blob/3e4f5dd099b31633b4473288dc1b2b5c913879b9/pics/module_1.png)
 
 - `[module path]`为可选参数，但当其不是在`$GOPATH/src`文件夹中时，必须指定。`[module path]`会被默认为`module`的名称。
 - 在`$GOPATH/src`文件夹中时，可以不指定，默认会以相对于`src`文件夹的路径。
@@ -1263,7 +1263,7 @@ Go Module 的定义与 `vendor`本身就是**共存**的，通过`go build/run`�
 
 ## 🔶 异常处理
 
-异常是畅叙没有按照预期运行的统称，可能是因为输入错误，也有可能是程序本身设计上的缺陷、代码上的漏洞导致的。
+异常`Exception`是程序没有按照预期运行的统称，可能是因为输入错误，也有可能是程序本身设计上的缺陷、代码上的漏洞导致的。
 
 常见的异常有：
 - 除0
@@ -1295,51 +1295,213 @@ Go Module 的定义与 `vendor`本身就是**共存**的，通过`go build/run`�
 
 ### 🔸 处理异常
 
-1. 暴露错误  
-   在编程时，要及时暴露错误，而不是忽略它们。  
-   错误可能的来源有：
+**1. 暴露错误**
+
+   在编程时，要及时暴露错误，而不是忽略它们。错误可能的来源有：
    - 主动暴露的错误：`panic`,`error`
    - 调用其它函数（非当前函数）返回的错误：这种错误是可预测的，需要尽快暴露错误并结束当前函数运行，而非忽略它们。
 
-2. 处理错误  
-   当调用其它函数（非本函数）时，如果返回有错误`error`，务必处理错误，不可轻易忽略。常见做法是返回错误信息：
-    ```go
-    package main
-    
-    import "fmt"
-    
-    func main() {
-        gender, weight, err := inputInfo()
-        fmt.Printf("gender: %s\n", gender)
-        fmt.Printf("weight: %.2f\n", weight)
-        fmt.Println(err)
-    }
-    
-    func inputInfo() (sex string, weight float64, err error) {
-        sex = ""
-        weight = 0
-        fmt.Print("input your gender: ")
-        _, _ = fmt.Scanln(&sex)
-        if sex != "male" && sex != "female" {
-            err = fmt.Errorf("gender: %s is neither male nor female", sex)
-            return
-        }
-        fmt.Print("input your weight: ")
-        _, _ = fmt.Scanln(&weight)
-        if weight <= 10 || weight > 200 {
-            err = fmt.Errorf("weight: %.2f is out of range", weight)
-            return
-        }
-        return
-    }
-    ```
-3. 抓住错误  
-   在程序运行时，有一类错误是无法预测的错误，它们不是主动返回的`error`，而是直接以`panic`的当时出现，直接熬制应用程序崩溃，尤其是在使用了不可控的第三方函数，或使用没有进行完整测试、校验的代码。这种错误**必须**被抓组，避免整个程序崩溃退出。  
-   像除0、索引`index`错误、溢出、空指针、类型转换失败、并发读写、管道操作错误等都属于这种类型的错误。  
-   抓住这种错误的方式是在函数题重新定义`defer`方法，并在方法中使用`recover`来捕获这类异常，比如：
-```go
+**2. 处理错误**
 
+   当调用其它函数（非本函数）时，如果返回有错误`error`，务必处理错误，不可轻易忽略。常见做法是返回错误信息：
+  ```go
+  package main
+  
+  import "fmt"
+  
+  func main() {
+      gender, weight, err := inputInfo()
+      fmt.Printf("gender: %s\n", gender)
+      fmt.Printf("weight: %.2f\n", weight)
+      fmt.Println(err)
+  }
+  
+  func inputInfo() (sex string, weight float64, err error) {
+      sex = ""
+      weight = 0
+      fmt.Print("input your gender: ")
+      _, _ = fmt.Scanln(&sex)
+      if sex != "male" && sex != "female" {
+          err = fmt.Errorf("gender: %s is neither male nor female", sex)
+          return
+      }
+      fmt.Print("input your weight: ")
+      _, _ = fmt.Scanln(&weight)
+      if weight <= 10 || weight > 200 {
+          err = fmt.Errorf("weight: %.2f is out of range", weight)
+          return
+      }
+      return
+  }
+  ```
+
+**3. 抓住错误**
+
+在程序运行时，有一类错误是无法预测的错误，它们不是主动返回的`error`，而是直接以`panic`的当时出现，直接熬制应用程序崩溃，尤其是在使用了不可控的第三方函数，或使用没有进行完整测试、校验的代码。这种错误**必须**被抓组，避免整个程序崩溃退出。  
+
+像除0、索引`index`错误、溢出、空指针、类型转换失败、并发读写、管道操作错误等都属于这种类型的错误。  
+
+抓住这种错误的方式是在函数题重新定义`defer`方法，并在方法中使用`recover`来捕获这类异常，比如：
+  ```
+  defer func() {
+      r := recover()
+          if r != nil {
+          // detection: handle exception information
+      }
+  }
+  ```
+抓住错误意味着本次程序运行出现一些问题，比如输入的数据不合法/不合要求等，并不代表程序必须要崩溃退出。
+
+### 🔸 如何写出健壮的代码？
+
+**在编写代码时，任何担心出现的问题必定会出现（墨菲定律）。**
+
+为了提高编写代码的质量，需要精确控制每段代码的行为，并且做好足够的安全性保障：
+- 控制定定义域
+- 空指针检测
+- 使用`for-range`遍历
+- 谨慎使用共享变量
+- 控制并抓住异常
+
+
+## 🔶 单步调试 `debug`
+
+单步调试是指程序开发中，为了找到程序的`bug`，通常采用的一种调试手段。即：一步一步跟踪程序执行的流程，根据变量的值，找到错误的原因。
+
+### 🔸 断点
+
+断点是单步调试过程中添加的特定的检查点，在 GoLand 的 Bookmarks 中查看。在单步调试时，会直接运行到断点并停下。
+
+如果没有断点，程序则会正常运行，直至遇到阻塞才会停下，否则直接运行直至退出。
+
+### 🔸 `main()`函数单步调试练习
+
+## 🔶 单元测试
+
+单元测试是指在计算机编程中针对一块特定的模块、组建、方法进行测试以验证其是否满足业务、质量需求的测试方法。
+
+### 🔸 如何编写 Golang 单元测试？
+
+单元测试的关键组成部分：
+- 预备案例
+- 预期结果
+- 组件调用
+- 衡量预期
+
+Golang 针对单元测试，有两种测试方法： 
+1. 黑盒测试  
+测试案例与源码在同一个目录下，但是不在同一个包中。测试案例仅针对目标包里暴露出的公有方法进行测试。
+2. 白盒测试
+测试案例与源码在同一个目录、同一个包中。测试案例可以看到包中的私有变量、方法，可以针对每一项进行测试。
+
+Golang 的单元测试编写规则：
+- 必须包含在以`_test.go`结尾的文件中
+- 必须符合命名规则`func TestXxxxx(t *testing.T){...}`或者`func Test_Xxxxx(t *testing.T){...}`
+- 对于预期失败的`case`，需要调用`t.Fail()`, `t.FailNow()`, `t.Error(...)`, `t.Errorf()`, `t.Fatal(...)`, `t.FatalIf(...)`...等来声明失败
+  ```go
+  package main
+  import (
+  
+  "math"
+  "testing"
+  )
+  func TestMain(t *testing.T) {
+      var expectedBMI float64 = 18.9
+      actualOutput := calcBMI(1.70, 69)
+      if expectedBMI != actualOutput {
+          // ...
+          t.Fail()
+      }
+  }
+  func calcBMI(height, weight float64) (bmi float64){
+      bmi = weight / math.Pow(height, 2)
+      return
+  }
+  ```
+  在以上声明语句中：
+  - `t.Fail()`和 `t.FailNow()`标记`test case`已经失败，程序继续往下执行，但没有任何输出
+  - `t.Error(...)`和 `t.Errorf()`不仅标记`test case`是失败的，而且会抛出错误信息，程序会继续往下执行
+  - `t.Fatal(...)`和`t.FatalIf(...)`在`test case`失败后直接结束程序运行，跳过之后的所有代码，相当于调用了`Exit()`，结束单元测试
+
+### 🔸 如何运行 Golang 单元测试？
+
+单元测试可以通过命令行运行，也可通过 VS Code、GoLand 运行。
+
+命令行运行：
 ```
+go test <package path>[/...][-run<UT function name regex rule>]
+
+e.g.
+go test <package path>
+go test <package path>/...
+go test <package path>/...-run^TestMain$
+```
+> 【注意】  
+> ![image](https://github.com/AdaSheng07/ready.to.go/blob/29f947b1983e92ed97e952ce3795a3ef5c96d788/pics/unit_test_1.png)
+> 
+> 当在此文件目录下运行单元测试`calc_bmi_test.go`时，会报错：
+> ```
+> $ go test ./calculator/calc_bmi_test.go
+> # command-line-arguments [command-line-arguments.test]
+> calculator/calc_bmi_test.go:12:24: undefined: CalcBMI
+> FAIL    command-line-arguments [build failed]
+> FAIL
+> ```
+> 这是因为在`calc_bmi_test.go`中我们使用了`CalcBMI`这个同包不同文件的公有函数，`CalcBMI`并没有在`calc_bmi_test.go`文件中定义。解决办法是在**整个文件夹目录下运行**单元测试，如：
+> ```
+> $ go test ./calculator
+> ok      learn.go/chapter3/016.unitTest/calculator       1.724s
+> ```
+> 或者，在 IDE 中直接运行也可以看到最终结果：  
+> ![image](https://github.com/AdaSheng07/ready.to.go/blob/53fb37d8a2b8051a7d12d39f95d4393ba259c161/pics/unit_test_2.png)
+
+在 VS Code 中运行单元测试 //todo lecture 8 02：58：06
+
+
+
+
+## 🔵 Module 3 Practice Collection
+
+### 🔹 异常处理
+
+### 🔹 单步调试
+
+> **Q1** 单步调试这么强大，是不是任何问题都可以通过单步调试来完成？除了单步调试之外，还有什么方式能够辅助发现异常点？
+>> 
+>> 
+
+> **Q2** 
+
+> **Q3**  
+>
+>      [>>  ]()
+
+
+### 🔹 包
+
+> **Q1** 我们已经学会引用我们自己的 module 中的包、方法，怎么使用其他人开发的，或者说开源社区
+的 module 呢？
+
+### 🔹 Go Module
+
+> **Q1** Go Module 实战：让体脂计算器接受从命令行传入的姓名、性别、身高、体重、年龄，直接计算其体脂并给出结果。
+
+> **Q2** Go Module 管理依赖已经很完善，是不是只要使用了 Go Module 就万无一失？
+>> 不是万无一失：
+>> - Go Module 完全依赖`git`服务，与`git`上的`branch`、`release tag`紧密相关。`Git`服务不属于 Go Module 的管理范畴。
+>> - `Git`上的`branch`、`release tag`可以随时被删除、重写
+>> - Go Module在依赖不改变时是可靠的，但在依赖改变时就不再可靠了
+>>
+>> 对项目的影响：
+>> - 项目可能因为`git`服务的变更而无法编译
+>> - 编译出来的程序行为不一致
+>
+> 如何用一种更可靠、稳定的方式来管理依赖项目呢？如何保证不同使用者编译、运行相同程序的行为一模一样？
+> -> 引入`Vendor`
+
+> **Q3** 使用GitHub上的公有函数来实现功能，重写BMI和体脂计算器，用`module replace`替换GitHub上的，并使用`vendor`为项目依赖提供保障。
+
+****
 
 
 

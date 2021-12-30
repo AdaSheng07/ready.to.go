@@ -4,6 +4,9 @@ github.com/armstrongli/go-bmi
 # github.com/inconshreveable/mousetrap v1.0.0
 ## explicit
 github.com/inconshreveable/mousetrap
+# github.com/shopspring/decimal v1.3.1
+## explicit; go 1.13
+github.com/shopspring/decimal
 # github.com/spf13/cobra v1.3.0
 ## explicit; go 1.15
 github.com/spf13/cobra
