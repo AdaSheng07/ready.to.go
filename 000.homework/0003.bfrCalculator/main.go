@@ -22,14 +22,14 @@ func main() {
 			"Check for this peron's healthy status and give out specialized suggestions.",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("Name:", name)
-			fmt.Println("Gender:", gender)
+			fmt.Println("Gender(male/female):", gender)
 			fmt.Println("Height(m):", height)
 			fmt.Println("Weight(kg):", weight)
 			fmt.Println("Age:", age)
 
 			// calculate bmi & calculator and print them out
 			bmi, _ := gobmi.CalcBMI(weight, height)
-			bfr := gobmi.CalcBFR(bmi, age, gender)
+			bfr, _ := gobmi.CalcBFR(bmi, age, gender)
 
 			// healthiness assessment & suggestions and print them out
 			gobmi.GiveOutSuggestions(bfr, gender, age)
