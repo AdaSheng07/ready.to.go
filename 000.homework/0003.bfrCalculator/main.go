@@ -32,7 +32,7 @@ func main() {
 			bfr, _ := gobmi.CalcBFR(bmi, age, gender)
 
 			// healthiness assessment & suggestions and print them out
-			gobmi.GiveOutSuggestions(bfr, gender, age)
+			_ = gobmi.GiveOutSuggestions(bfr, gender, age)
 		},
 	}
 	cmd.Flags().StringVar(&name, "name", "", "input name")
