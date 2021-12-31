@@ -1,4 +1,4 @@
-package calculator
+package gobmi
 
 import (
 	"github.com/shopspring/decimal"
@@ -8,16 +8,14 @@ import (
 func TestCalcBMI(t *testing.T) {
 	inputHeight, inputWeight := 1.70, 65.0
 	expectedOutput := 22.49
-	t.Logf("start calculating bmi: input height = %.2f, weight = %.2f, expecting bmi = %.2f.\n", inputHeight, inputWeight, expectedOutput)
+	t.Logf("start calculating bmi: \nheight: %.2f \nweight: %.2f \nexpecting bmi = %.2f.\n", inputHeight, inputWeight, expectedOutput)
 	actualOutput, err := CalcBMI(inputHeight, inputWeight)
 	if err != nil {
-		t.Fatalf("major error: bmi is wrongly calculated, expecting no error but got %v", err)
+		t.Fatalf("major error emerges while calculating bmi: %v\n", err)
 	}
 	actualFormatOutput, _ := decimal.NewFromFloat(actualOutput).RoundFloor(2).Float64()
 	if expectedOutput != actualFormatOutput {
 		t.Logf("expecting %f, but got %f.\n", expectedOutput, actualFormatOutput)
 		t.Failed()
-		// 或者
-		// t.Errorf("expecting %f, but got %f.\n", expectedOutput, actualFormatOutput)
 	}
 }
