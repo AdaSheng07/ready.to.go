@@ -37,15 +37,53 @@ func TestCase1(t *testing.T) {
 	{
 		rankOfLJ, fatRateOfLJ := getRank("李静")
 		if rankOfLJ != 1 {
-			t.Fatalf("预期王李静的排名是第一，实际排名是：%d", rankOfLJ)
+			t.Fatalf("预期李静的排名是第一，实际排名是：%d", rankOfLJ)
 		}
 		if fatRateOfLJ != 0.28 {
-			t.Fatalf("预期王强的体脂率是0.28，实际是：%f", fatRateOfLJ)
+			t.Fatalf("预期李静的体脂率是0.28，实际是：%f", fatRateOfLJ)
 		}
 	}
 
 }
 
-func TestCase2(t *testing.T) {
+/*
+案例2：
+- 王强录入体脂是38
+- 张伟录入体脂是38
+- 李静录入体脂是28
 
+李静排名第一，体脂28，王强、张伟排名第二，体脂38。
+*/
+
+func TestCase2(t *testing.T) {
+	inputRecord("王强", 0.38)
+	inputRecord("张伟", 0.38)
+	inputRecord("李静", 0.28)
+	{
+		rankOfWQ, fatRateOfWQ := getRank("王强")
+		if rankOfWQ != 2 {
+			t.Fatalf("预期王强的排名是第二，实际排名是：%d", rankOfWQ)
+		}
+		if fatRateOfWQ != 0.38 {
+			t.Fatalf("预期王强的体脂率是0.38，实际是：%f", fatRateOfWQ)
+		}
+	}
+	{
+		rankOfZW, fatRateOfZW := getRank("张伟")
+		if rankOfZW != 2 {
+			t.Fatalf("预期张伟的排名是第一，实际排名是：%d", rankOfZW)
+		}
+		if fatRateOfZW != 0.38 {
+			t.Fatalf("预期张伟的体脂率是0.38，实际是：%f", fatRateOfZW)
+		}
+	}
+	{
+		rankOfLJ, fatRateOfLJ := getRank("李静")
+		if rankOfLJ != 1 {
+			t.Fatalf("预期李静的排名是第一，实际排名是：%d", rankOfLJ)
+		}
+		if fatRateOfLJ != 0.38 {
+			t.Fatalf("预期张伟的体脂率是0.38，实际是：%f", fatRateOfLJ)
+		}
+	}
 }
