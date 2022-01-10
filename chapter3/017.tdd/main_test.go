@@ -87,3 +87,42 @@ func TestCase2(t *testing.T) {
 		}
 	}
 }
+
+/*
+案例3：
+- 王强录入体脂是38
+- 李静录入体脂是28
+- 张伟注册成功，未录入体脂
+
+李静排名第一，体脂28；王强排名第二，体脂28；张伟排名第三，没有体脂记录。
+*/
+
+func TestCase3(t *testing.T) {
+	inputRecord("王强", 0.38)
+	inputRecord("李静", 0.28)
+	inputRecord("张伟")
+	{
+		rankOfLJ, fatRateOfLJ := getRank("李静")
+		if rankOfLJ != 1 {
+			t.Fatalf("预期李静的排名是第一，实际排名是：%d", rankOfLJ)
+		}
+		if fatRateOfLJ != 0.28 {
+			t.Fatalf("预期李静的体脂率是0.38，实际是：%f", fatRateOfLJ)
+		}
+	}
+	{
+		rankOfWQ, fatRateOfWQ := getRank("王强")
+		if rankOfWQ != 2 {
+			t.Fatalf("预期王强的排名是第二，实际排名是：%d", rankOfWQ)
+		}
+		if fatRateOfWQ != 0.38 {
+			t.Fatalf("预期王强的体脂率是0.38，实际是：%f", fatRateOfWQ)
+		}
+	}
+	{
+		rankOfZW, _ := getRank("张伟")
+		if rankOfZW != 3 {
+			t.Fatalf("预期张伟的排名是第三，实际排名是：%d", rankOfZW)
+		}
+	}
+}
