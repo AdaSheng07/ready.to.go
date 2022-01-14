@@ -23,7 +23,7 @@ type Elevator struct {
 到最后一个目的后，如果另一个方向还有未到达楼层，则电梯调转方向，逐个送到最后目的地，直到所有目标都送达
 */
 
-// GetOrderOfDockedFloors 利用升序/降序排列后的电梯目标楼层切片，规划电梯停靠的楼层顺序
+// GetOrderOfDockedFloors 检查录入数据，利用升序/降序排列后的电梯目标楼层切片，规划电梯停靠的楼层顺序
 func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) (err error) {
 	// 对电梯初始化数据进行检查
 	if e.totalFloors < e.currentFloor {

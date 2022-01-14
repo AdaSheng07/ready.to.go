@@ -29,7 +29,7 @@ func getElevatorInfoFromInput() *Elevator {
 		fmt.Print("目标楼层：")
 		fmt.Scanf("%d\n", &targetFloor)
 		targetFloors = append(targetFloors, targetFloor)
-		fmt.Print("继续录入？(y/n)")
+		fmt.Print("继续录入？(输入n停止录入，其它任意键继续)")
 		fmt.Scanln(&ans)
 		if ans == "n" {
 			break
