@@ -60,8 +60,8 @@ func getFakeElevatorInfoFromInput2() *Elevator {
 
 func getFakeElevatorInfoFromInput3() *Elevator {
 	return &Elevator{
-		totalFloors:  2,
+		totalFloors:  5,
 		currentFloor: 4,
-		targetFloors: []int{},
+		targetFloors: []int{2},
 	}
 }
