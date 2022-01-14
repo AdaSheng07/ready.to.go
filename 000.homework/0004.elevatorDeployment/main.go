@@ -6,6 +6,7 @@ func main() {
 	// 实例化一个elevatorDeploymentService
 	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
 	e := getFakeElevatorInfoFromInput3()
+	// e := getElevatorInfoFromInput()
 	fmt.Println(elevatorDeploymentSvc.DeployElevator(e))
 }
 
