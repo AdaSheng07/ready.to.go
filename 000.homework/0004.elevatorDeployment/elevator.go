@@ -39,6 +39,10 @@ func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) (err error) {
 			continue
 		}
 	}
+	// 如果目标楼层切片为空，不进行排序，直接跳出
+	if len(e.targetFloors) == 0 {
+		return nil
+	}
 	// 升序/降序排列电梯目标楼层切片，并确定电梯刚开始运行时的方向
 	targetFloorsSorted, direction := e.sortTargetFloors()
 	// 根据排序后的目标楼层切片和电梯一开始的运行方向，规划电梯到达所有目标楼层的应有顺序
@@ -75,9 +79,6 @@ func (e *Elevator) deployOrderOfFloors(direction bool, targetFloorsSorted []int)
 // sortTargetFloors 判断电梯一开始的运行方向，根据方向上/下，将电梯目标楼层切片的拷贝升序/降序排列
 func (e *Elevator) sortTargetFloors() (result []int, dir bool) {
 	result = []int{}
-	if len(e.targetFloors) == 0 {
-		return result, true
-	}
 	result = append(result, e.targetFloors...) // 做电梯目标楼层切片的拷贝
 	// 判断电梯刚开始运行时的方向：
 	// 如果第一个目标楼层 > 电梯当前所在楼层：电梯向上运行，将电梯目标楼层升序排列
