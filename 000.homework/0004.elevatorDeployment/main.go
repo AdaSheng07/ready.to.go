@@ -3,16 +3,10 @@ package main
 import "fmt"
 
 func main() {
-	//e := getElevatorInfoFromInput()
-	//deploy := Deploy{}
-	//deploy.Operation(e)
-
 	// 实例化一个elevatorDeploymentService
 	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
-	//e := getFakeElevatorInfoFromInput()
-	//elevatorDeploymentSvc.DeployElevator(e)
-	elevator := getElevatorInfoFromInput()
-	elevatorDeploymentSvc.DeployElevator(elevator)
+	e := getFakeElevatorInfoFromInput3()
+	fmt.Println(elevatorDeploymentSvc.DeployElevator(e))
 }
 
 func getElevatorInfoFromInput() *Elevator {
@@ -61,5 +55,13 @@ func getFakeElevatorInfoFromInput2() *Elevator {
 		totalFloors:  7,
 		currentFloor: 5,
 		targetFloors: []int{7, 2, 3, 4, 6},
+	}
+}
+
+func getFakeElevatorInfoFromInput3() *Elevator {
+	return &Elevator{
+		totalFloors:  5,
+		currentFloor: 4,
+		targetFloors: []int{},
 	}
 }

@@ -1,12 +1,11 @@
 package main
 
-import "time"
-
 type elevatorDeploymentService struct {
 	d *Deploy
 }
 
-func (svc *elevatorDeploymentService) DeployElevator(elevator *Elevator) (int, time.Duration) {
+func (svc *elevatorDeploymentService) DeployElevator(elevator *Elevator) string {
 	elevator.GetOrderOfDockedFloors(elevator)
-	return svc.d.Operation(elevator)
+	svc.d.Operation(elevator)
+	return svc.d.deployStrategy
 }

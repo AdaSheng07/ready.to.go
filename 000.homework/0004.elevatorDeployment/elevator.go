@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -23,11 +24,26 @@ type Elevator struct {
 */
 
 // GetOrderOfDockedFloors 利用升序/降序排列后的电梯目标楼层切片，规划电梯停靠的楼层顺序
-func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) {
+func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) (err error) {
+	// 对电梯初始化数据进行检查
+	if e.totalFloors < e.currentFloor {
+		err = fmt.Errorf("电梯总楼层数量小于电梯当前所在楼层，输入有误")
+		return
+	}
+	if len(e.targetFloors) > 0 {
+		for _, floor := range e.targetFloors {
+			if e.totalFloors < floor {
+				err = fmt.Errorf("电梯总楼层数量小于目标楼层，输入有误")
+				return
+			}
+			continue
+		}
+	}
 	// 升序/降序排列电梯目标楼层切片，并确定电梯刚开始运行时的方向
 	targetFloorsSorted, direction := e.sortTargetFloors()
 	// 根据排序后的目标楼层切片和电梯一开始的运行方向，规划电梯到达所有目标楼层的应有顺序
 	e.deployOrderOfFloors(direction, targetFloorsSorted)
+	return nil
 }
 
 func (e *Elevator) deployOrderOfFloors(direction bool, targetFloorsSorted []int) {
@@ -59,19 +75,21 @@ func (e *Elevator) deployOrderOfFloors(direction bool, targetFloorsSorted []int)
 // sortTargetFloors 判断电梯一开始的运行方向，根据方向上/下，将电梯目标楼层切片的拷贝升序/降序排列
 func (e *Elevator) sortTargetFloors() (result []int, dir bool) {
 	result = []int{}
+	if len(e.targetFloors) == 0 {
+		return result, true
+	}
 	result = append(result, e.targetFloors...) // 做电梯目标楼层切片的拷贝
 	// 判断电梯刚开始运行时的方向：
 	// 如果第一个目标楼层 > 电梯当前所在楼层：电梯向上运行，将电梯目标楼层升序排列
 	if e.targetFloors[0] > e.currentFloor {
-		// 升序排列电梯目标楼层切片
-		result = sortAscending(result)
-		dir = true
+		result = sortAscending(result) // 升序排列电梯目标楼层切片
+		dir = true                     // 电梯向上运行
 	} else {
 		// 第一个目标楼层 < 电梯当前所在楼层：电梯向下运行
-		// 降序排列电梯目标楼层切片
-		result = sortDescending(result)
-		dir = false
+		result = sortDescending(result) // 降序排列电梯目标楼层切片
+		dir = false                     // 电梯向下运行
 	}
+	// 返回升序/降序排列后的
 	return result, dir
 }
 
