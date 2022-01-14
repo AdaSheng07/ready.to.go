@@ -107,7 +107,7 @@ func TestCase5(t *testing.T) {
 
 /*
 补充案例6：
-楼层有5层，电梯在3层。上来一些人后，目标楼层： 4楼、5楼、2楼。
+楼层有5层，电梯在3层。上来一些人后，目标楼层： 4楼、2楼、5楼。
 电梯先向上到4楼，然后到5楼，之后转头到2楼，最后停在2楼。
 */
 func TestCase6(t *testing.T) {
@@ -128,21 +128,34 @@ func TestCase6(t *testing.T) {
 
 /*
 补充案例7：
-楼层有5层，电梯在3层。上来一些人后，目标楼层： 4楼、5楼、2楼。
-电梯先向上到4楼，然后到5楼，之后转头到2楼，最后停在2楼。
+楼层有7层，电梯在3层。上来一些人后，目标楼层： 2楼、1楼、5楼、4楼、6楼。
+电梯先向下到2楼，然后到1楼，之后转头到4楼，5楼，6楼，最后停在6楼。
 */
 func TestCase7(t *testing.T) {
-	elevator6 := Elevator{
-		totalFloors:  7,
-		currentFloor: 3,
-		targetFloors: []int{2, 1, 5, 4, 6},
+	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
+	elevator7 := getFakeElevatorInfoFromInput1()
+	positionOfElevator8, timeDurationOfElevator8 := elevatorDeploymentSvc.DeployElevator(elevator7)
+	if positionOfElevator8 != 6 {
+		t.Fatalf("预期电梯停在 6 楼，实际电梯停靠在 %d 层", positionOfElevator8)
 	}
-	deploy7 := Deploy{}
-	positionOfElevator7, timeDurationOfElevator7 := deploy7.Operation(&elevator6)
-	if positionOfElevator7 != 6 {
-		t.Fatalf("预期电梯停在 6 楼，实际电梯停靠在 %d 层", positionOfElevator7)
+	if timeDurationOfElevator8 != time.Second*time.Duration(7) {
+		t.Fatalf("预期电梯运行花费 7 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator8)
 	}
-	if timeDurationOfElevator7 != time.Second*time.Duration(7) {
-		t.Fatalf("预期电梯运行花费 7 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator7)
+}
+
+/*
+补充案例8：
+楼层有7层，电梯在5层。上来一些人后，目标楼层： 7楼、2楼、3楼、4楼、6楼。
+电梯先向上到6楼，然后到7楼，之后转头到4楼、3楼、2楼，最后停在2楼。
+*/
+func TestCase8(t *testing.T) {
+	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
+	elevator8 := getFakeElevatorInfoFromInput2()
+	positionOfElevator8, timeDurationOfElevator8 := elevatorDeploymentSvc.DeployElevator(elevator8)
+	if positionOfElevator8 != 2 {
+		t.Fatalf("预期电梯停在 2 楼，实际电梯停靠在 %d 层", positionOfElevator8)
+	}
+	if timeDurationOfElevator8 != time.Second*time.Duration(7) {
+		t.Fatalf("预期电梯运行花费 7 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator8)
 	}
 }

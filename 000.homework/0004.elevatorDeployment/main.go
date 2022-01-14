@@ -48,10 +48,18 @@ func getElevatorInfoFromInput() *Elevator {
 	}
 }
 
-func getFakeElevatorInfoFromInput() *Elevator {
+func getFakeElevatorInfoFromInput1() *Elevator {
 	return &Elevator{
 		totalFloors:  7,
 		currentFloor: 3,
 		targetFloors: []int{2, 1, 5, 4, 6},
+	}
+}
+
+func getFakeElevatorInfoFromInput2() *Elevator {
+	return &Elevator{
+		totalFloors:  7,
+		currentFloor: 5,
+		targetFloors: []int{7, 2, 3, 4, 6},
 	}
 }
