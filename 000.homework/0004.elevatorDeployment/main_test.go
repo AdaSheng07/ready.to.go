@@ -18,7 +18,7 @@ func TestCase1(t *testing.T) {
 	if positionOfElevator1 != elevator1.currentFloor {
 		t.Fatalf("预期电梯不动，实际电梯停靠在 %d 层", positionOfElevator1)
 	}
-	if timeDurationOfElevator1 != time.Duration(0) {
+	if timeDurationOfElevator1 != time.Second*time.Duration(0) {
 		t.Fatalf("预期电梯不动，花费 0 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator1)
 	}
 }
@@ -38,7 +38,7 @@ func TestCase2(t *testing.T) {
 	if positionOfElevator2 != 3 {
 		t.Fatalf("预期电梯停在 3 楼，实际电梯停靠在 %d 层", positionOfElevator2)
 	}
-	if timeDurationOfElevator2 != time.Duration(2) {
+	if timeDurationOfElevator2 != time.Second*time.Duration(2) {
 		t.Fatalf("预期电梯运行花费 2 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator2)
 	}
 }
@@ -59,7 +59,7 @@ func TestCase3(t *testing.T) {
 	if positionOfElevator3 != 2 {
 		t.Fatalf("预期电梯停在 2 楼，实际电梯停靠在 %d 层", positionOfElevator3)
 	}
-	if timeDurationOfElevator3 != time.Duration(3) {
+	if timeDurationOfElevator3 != time.Second*time.Duration(3) {
 		t.Fatalf("预期电梯运行花费 3 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator3)
 	}
 }
@@ -80,7 +80,7 @@ func TestCase4(t *testing.T) {
 	if positionOfElevator4 != 2 {
 		t.Fatalf("预期电梯停在 2 楼，实际电梯停靠在 %d 层", positionOfElevator4)
 	}
-	if timeDurationOfElevator4 != time.Duration(5) {
+	if timeDurationOfElevator4 != time.Second*time.Duration(5) {
 		t.Fatalf("预期电梯运行花费 5 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator4)
 	}
 }
@@ -100,7 +100,7 @@ func TestCase5(t *testing.T) {
 	if positionOfElevator5 != 2 {
 		t.Fatalf("预期电梯停在 2 楼，实际电梯停靠在 %d 层", positionOfElevator5)
 	}
-	if timeDurationOfElevator5 != time.Duration(2) {
+	if timeDurationOfElevator5 != time.Second*time.Duration(2) {
 		t.Fatalf("预期电梯运行花费 2 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator5)
 	}
 }
@@ -121,7 +121,7 @@ func TestCase6(t *testing.T) {
 	if positionOfElevator6 != 2 {
 		t.Fatalf("预期电梯停在 2 楼，实际电梯停靠在 %d 层", positionOfElevator6)
 	}
-	if timeDurationOfElevator6 != time.Duration(5) {
+	if timeDurationOfElevator6 != time.Second*time.Duration(5) {
 		t.Fatalf("预期电梯运行花费 5 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator6)
 	}
 }
@@ -142,7 +142,7 @@ func TestCase7(t *testing.T) {
 	if positionOfElevator7 != 6 {
 		t.Fatalf("预期电梯停在 6 楼，实际电梯停靠在 %d 层", positionOfElevator7)
 	}
-	if timeDurationOfElevator7 != time.Duration(7) {
+	if timeDurationOfElevator7 != time.Second*time.Duration(7) {
 		t.Fatalf("预期电梯运行花费 7 秒，实际电梯运行时间为：%v\n", timeDurationOfElevator7)
 	}
 }

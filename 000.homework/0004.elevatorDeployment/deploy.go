@@ -54,7 +54,7 @@ func (d *Deploy) multipleRequests(elevator *Elevator) (int, time.Duration) {
 		elevator.currentFloor = floor
 	}
 	// 将走完所有目标楼层所需时间存入d.timeDuration
-	d.timeDuration += time.Duration(sumOfFloors)
+	d.timeDuration += time.Second * time.Duration(sumOfFloors)
 	// 打印电梯的工作日志
 	fmt.Printf("%s: 最终电梯停靠在 %d 层，共用时 %v\n", d.timeStamp, elevator.currentFloor, d.timeDuration)
 	return elevator.currentFloor, d.timeDuration
@@ -68,7 +68,7 @@ func (d *Deploy) oneRequest(elevator *Elevator) (int, time.Duration) {
 	// 电梯每移动一层，需要一秒，计算当前楼层与目标楼层之间的层数，层数 * (1 秒) = 当前楼层到目标楼层的耗时
 	time.Sleep(time.Second * time.Duration(abs(elevator.targetFloors[0]-elevator.currentFloor)))
 	// 将到达目标楼层所需时间存入d.timeDuration
-	d.timeDuration = time.Duration(abs(elevator.targetFloors[0] - elevator.currentFloor))
+	d.timeDuration = time.Second * time.Duration(abs(elevator.targetFloors[0]-elevator.currentFloor))
 	// 更新到达目标楼层之后的时间戳
 	d.timeStamp = time.Now().Format("2006-01-02 15:04:05")
 	// 电梯目前所在楼层elevator.currentFloor更新为到达的目标楼层elevator.targetFloors[0]
@@ -85,7 +85,7 @@ func (d *Deploy) noRequest(elevator *Elevator) (int, time.Duration) {
 	// 电梯开始运行前，设定时间戳
 	d.timeStamp = time.Now().Format("2006-01-02 15:04:05")
 	// 无人使用电梯，电梯运行时间为0
-	d.timeDuration = time.Duration(0)
+	d.timeDuration = time.Second * time.Duration(0)
 	// 打印电梯的工作日志
 	fmt.Printf("%s: 无电梯请求，电梯不动，共用时 %v\n", d.timeStamp, d.timeDuration)
 	// 返回电梯当前停靠楼层和运行时间
