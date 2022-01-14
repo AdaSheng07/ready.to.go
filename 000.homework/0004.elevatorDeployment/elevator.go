@@ -39,7 +39,7 @@ func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) (err error) {
 			continue
 		}
 	}
-	// 如果目标楼层切片为空，不进行排序，直接跳出
+	// 如果目标楼层切片为空，不需进行排序，直接跳出
 	if len(e.targetFloors) == 0 {
 		return nil
 	}
@@ -90,7 +90,7 @@ func (e *Elevator) sortTargetFloors() (result []int, dir bool) {
 		result = sortDescending(result) // 降序排列电梯目标楼层切片
 		dir = false                     // 电梯向下运行
 	}
-	// 返回升序/降序排列后的
+	// 返回升序/降序排列后的楼层切片拷贝以及电梯的初始运行方向
 	return result, dir
 }
 

@@ -21,16 +21,16 @@ func (d *Deploy) Operation(elevator *Elevator) {
 	d.deployStrategy = "" // 初始化 deployStrategy 为空字符串
 	switch {
 	case len(elevator.targetFloors) == 0:
-		// 无人按电梯：如果没有目标楼层，targetFloors切片为空，电梯所在楼层不变
+		// 无人按电梯：没有目标楼层，targetFloors切片为空，电梯所在楼层不变
 		_ = d.noRequest(elevator)
 	case len(elevator.targetFloors) >= 1:
-		// 有人按电梯：目标楼层至少有两个，需要规划电梯运行的优先方向和到达目标楼层的顺序：orderOfDockedFloors
-		_ = d.Request(elevator)
+		// 有人按电梯：需要规划电梯运行的优先方向和到达目标楼层的顺序：orderOfDockedFloors
+		_ = d.request(elevator)
 	}
 }
 
-// Request 多人按电梯时候，遵循特定的规则运行，需要先排序
-func (d *Deploy) Request(elevator *Elevator) (err error) {
+// request 有人使用电梯，电梯遵循特定的规则运行，需要先排序目标楼层
+func (d *Deploy) request(elevator *Elevator) (err error) {
 	err = elevator.GetOrderOfDockedFloors(elevator) // 根据电梯的初始化信息，规划电梯应该以 GetOrderOfDockedFloors(elevator) 更新得到的顺序依次到达各目标楼层，如有错误，返回
 	if err != nil {
 		log.Println("规划电梯停靠的楼层顺序时出错：", err)
@@ -60,13 +60,12 @@ func (d *Deploy) noRequest(elevator *Elevator) (err error) {
 		return err
 	}
 	d.timeDuration = time.Second * time.Duration(0) // 无人使用电梯，电梯运行时间为0
-	// 打印电梯的工作日志
-	d.finalFloor = elevator.currentFloor // 将电梯最终所在楼层存入d.finalFloor
+	d.finalFloor = elevator.currentFloor            // 将电梯最终所在楼层存入d.finalFloor
 	d.deployStrategy = fmt.Sprintf("无电梯请求，电梯不动，共用时 %v\n", d.timeDuration)
 	return nil
 }
 
-// arrivingAtTargetFloor 从当前楼层到目标楼层所需要的时间等待
+// arrivingAtTargetFloor 从当前楼层到目标楼层所需要等待的时间（秒）
 func arrivingAtTargetFloor(currentFloor, floor int) {
 	// 电梯每移动一层，需要一秒，计算当前楼层与目标楼层之间的层数，层数 * (1 秒) = 当前楼层到目标楼层的耗时
 	time.Sleep(time.Second * time.Duration(abs(floor-currentFloor)))
