@@ -10,6 +10,11 @@ func main() {
 	fmt.Println(elevatorDeploymentSvc.DeployElevator(e2))
 	e3 := getFakeElevatorInfoFromInput3()
 	fmt.Println(elevatorDeploymentSvc.DeployElevator(e3))
+	e4 := getFakeElevatorInfoFromInput4()
+	fmt.Println(elevatorDeploymentSvc.DeployElevator(e4))
+
+	//elevator := getElevatorInfoFromInput()
+	//fmt.Println(elevatorDeploymentSvc.DeployElevator(elevator))
 }
 
 func getElevatorInfoFromInput() *Elevator {
@@ -38,7 +43,7 @@ func getElevatorInfoFromInput() *Elevator {
 		}
 	}
 
-	// 录入电梯的运行规则选择
+	// 选择电梯的运行规则
 	var upgrade bool
 	var ans2 string
 	fmt.Printf("是否按照改进后的规则运行？(输入n按照原有规则运行，其它任意键默认按照改进后的规则运行)")
@@ -98,5 +103,6 @@ func getFakeElevatorInfoFromInput4() *Elevator {
 		totalFloors:  5,
 		currentFloor: 4,
 		targetFloors: []int{2},
+		// 未给定upgrade，默认为false
 	}
 }

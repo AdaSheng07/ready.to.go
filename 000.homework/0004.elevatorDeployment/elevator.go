@@ -54,7 +54,7 @@ func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) (err error) {
 	case true:
 		fmt.Println("按照改进后的原则运行电梯：")
 		// 根据改进版电梯运行规则，升序/降序排列电梯目标楼层切片，并确定电梯刚开始运行时的方向
-		targetFloorsSorted, direction := e.sortTargetFloorsUpgrade()
+		targetFloorsSorted, direction := e.setStartingDirectionUpgrade()
 		// 根据排序后的目标楼层切片和电梯一开始的运行方向，规划电梯到达所有目标楼层的应有顺序
 		e.deployOrderOfFloors(direction, targetFloorsSorted)
 	}
@@ -111,7 +111,7 @@ func (e *Elevator) setStartingDirection() (result []int, dir bool) {
 // 电梯的所有目标楼层和电梯的当前所在楼层组成切片，一起从小到大排序：
 // - 如果电梯当前所在楼层处于切片的前半段，即向上方的目标更多：电梯先向上运行
 // - 如果电梯当前所在楼层处于切片的后半段，即向下方的目标更多：电梯先向下运行
-func (e *Elevator) sortTargetFloorsUpgrade() (result []int, dir bool) {
+func (e *Elevator) setStartingDirectionUpgrade() (result []int, dir bool) {
 	result = []int{}
 	result = append(result, e.targetFloors...) // 做电梯目标楼层切片的拷贝
 	// 将电梯当前所在楼层与目标楼层切片的中间值比较
