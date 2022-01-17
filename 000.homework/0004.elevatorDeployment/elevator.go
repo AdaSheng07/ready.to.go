@@ -9,6 +9,7 @@ type Elevator struct {
 	totalFloors  int   // 电梯总层数
 	currentFloor int   // 电梯当前所在楼层
 	targetFloors []int // 电梯目标楼层
+	upgrade      bool  // 电梯按照默认的规则运行（false），或者按照改进后的规则运行（true）
 
 	orderOfDockedFloors []int // 电梯应该按照规则停靠目标楼层的顺序：需要 GetOrderOfDockedFloors() 来计算
 }
@@ -43,13 +44,24 @@ func (e *Elevator) GetOrderOfDockedFloors(elevator *Elevator) (err error) {
 	if len(e.targetFloors) == 0 {
 		return nil
 	}
-	// 升序/降序排列电梯目标楼层切片，并确定电梯刚开始运行时的方向
-	targetFloorsSorted, direction := e.sortTargetFloors()
-	// 根据排序后的目标楼层切片和电梯一开始的运行方向，规划电梯到达所有目标楼层的应有顺序
-	e.deployOrderOfFloors(direction, targetFloorsSorted)
+	switch e.upgrade {
+	case false:
+		fmt.Println("按照原有规则运行电梯：")
+		// 升序/降序排列电梯目标楼层切片，并确定电梯刚开始运行时的方向
+		targetFloorsSorted, direction := e.setStartingDirection()
+		// 根据排序后的目标楼层切片和电梯一开始的运行方向，规划电梯到达所有目标楼层的应有顺序
+		e.deployOrderOfFloors(direction, targetFloorsSorted)
+	case true:
+		fmt.Println("按照改进后的原则运行电梯：")
+		// 根据改进版电梯运行规则，升序/降序排列电梯目标楼层切片，并确定电梯刚开始运行时的方向
+		targetFloorsSorted, direction := e.sortTargetFloorsUpgrade()
+		// 根据排序后的目标楼层切片和电梯一开始的运行方向，规划电梯到达所有目标楼层的应有顺序
+		e.deployOrderOfFloors(direction, targetFloorsSorted)
+	}
 	return nil
 }
 
+// deployOrderOfFloors 规划所有目标楼层的到达顺序
 func (e *Elevator) deployOrderOfFloors(direction bool, targetFloorsSorted []int) {
 	switch direction {
 	// direction 为true时电梯向上运行，为false时电梯向下运行
@@ -76,8 +88,8 @@ func (e *Elevator) deployOrderOfFloors(direction bool, targetFloorsSorted []int)
 	}
 }
 
-// sortTargetFloors 判断电梯一开始的运行方向，根据方向上/下，将电梯目标楼层切片的拷贝升序/降序排列
-func (e *Elevator) sortTargetFloors() (result []int, dir bool) {
+// setStartingDirection 判断电梯一开始的运行方向，并根据方向上/下，将电梯目标楼层切片的拷贝升序/降序排列
+func (e *Elevator) setStartingDirection() (result []int, dir bool) {
 	result = []int{}
 	result = append(result, e.targetFloors...) // 做电梯目标楼层切片的拷贝
 	// 判断电梯刚开始运行时的方向：
@@ -87,6 +99,28 @@ func (e *Elevator) sortTargetFloors() (result []int, dir bool) {
 		dir = true                     // 电梯向上运行
 	} else {
 		// 第一个目标楼层 < 电梯当前所在楼层：电梯向下运行
+		result = sortDescending(result) // 降序排列电梯目标楼层切片
+		dir = false                     // 电梯向下运行
+	}
+	// 返回升序/降序排列后的楼层切片拷贝以及电梯的初始运行方向
+	return result, dir
+}
+
+// sortTargetFloorUpgrade 重新判断电梯的运行方向，改进电梯运行方向判断规则：
+// 电梯根据当前的位置，优先向目标多的方向行进，直到该方向全部送达后重新根据当前的电梯位置做相同规则的选择。
+// 电梯的所有目标楼层和电梯的当前所在楼层组成切片，一起从小到大排序：
+// - 如果电梯当前所在楼层处于切片的前半段，即向上方的目标更多：电梯先向上运行
+// - 如果电梯当前所在楼层处于切片的后半段，即向下方的目标更多：电梯先向下运行
+func (e *Elevator) sortTargetFloorsUpgrade() (result []int, dir bool) {
+	result = []int{}
+	result = append(result, e.targetFloors...) // 做电梯目标楼层切片的拷贝
+	// 将电梯当前所在楼层与目标楼层切片的中间值比较
+	// 电梯当前所在楼层 <= 目标楼层切片中间值：电梯向上运行
+	if e.currentFloor <= result[(len(result)/2)] {
+		result = sortAscending(result) // 升序排列电梯目标楼层切片
+		dir = true                     // 电梯向上运行
+	} else {
+		// 电梯当前所在楼层 > 目标楼层切片中间值：电梯向下运行
 		result = sortDescending(result) // 降序排列电梯目标楼层切片
 		dir = false                     // 电梯向下运行
 	}

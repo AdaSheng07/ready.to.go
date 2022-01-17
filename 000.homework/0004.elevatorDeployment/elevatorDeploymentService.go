@@ -5,7 +5,6 @@ type elevatorDeploymentService struct {
 }
 
 func (svc *elevatorDeploymentService) DeployElevator(elevator *Elevator) string {
-	_ = elevator.GetOrderOfDockedFloors(elevator)
 	svc.d.Operation(elevator)
 	return svc.d.deployStrategy
 }

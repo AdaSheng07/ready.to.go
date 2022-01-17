@@ -13,6 +13,7 @@ func TestCase1(t *testing.T) {
 	elevator1 := Elevator{
 		totalFloors:  5,
 		currentFloor: 3,
+		upgrade:      false,
 	}
 	deploy1 := Deploy{}
 	deploy1.Operation(&elevator1)
@@ -36,6 +37,7 @@ func TestCase2(t *testing.T) {
 		totalFloors:  5,
 		currentFloor: 1,
 		targetFloors: []int{3},
+		upgrade:      false,
 	}
 	deploy2 := Deploy{}
 	deploy2.Operation(&elevator2)
@@ -60,6 +62,7 @@ func TestCase3(t *testing.T) {
 		totalFloors:  5,
 		currentFloor: 3,
 		targetFloors: []int{4, 2},
+		upgrade:      false,
 	}
 	deploy3 := Deploy{}
 	deploy3.Operation(&elevator3)
@@ -84,6 +87,7 @@ func TestCase4(t *testing.T) {
 		totalFloors:  5,
 		currentFloor: 3,
 		targetFloors: []int{4, 5, 2},
+		upgrade:      false,
 	}
 	deploy4 := Deploy{}
 	deploy4.Operation(&elevator4)
@@ -107,6 +111,7 @@ func TestCase5(t *testing.T) {
 		totalFloors:  5,
 		currentFloor: 4,
 		targetFloors: []int{2},
+		upgrade:      false,
 	}
 	deploy5 := Deploy{}
 	deploy5.Operation(&elevator5)
@@ -131,6 +136,7 @@ func TestCase6(t *testing.T) {
 		totalFloors:  5,
 		currentFloor: 3,
 		targetFloors: []int{4, 2, 5},
+		upgrade:      false,
 	}
 	deploy6 := Deploy{}
 	deploy6.Operation(&elevator6)
@@ -152,7 +158,7 @@ func TestCase6(t *testing.T) {
 */
 func TestCase7(t *testing.T) {
 	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
-	elevator7 := getFakeElevatorInfoFromInput1()
+	elevator7 := getFakeElevatorInfoFromInput0()
 	elevatorDeploymentSvc.DeployElevator(elevator7)
 	if elevatorDeploymentSvc.d.finalFloor != 6 {
 		t.Fatalf("预期电梯停在 6 楼，实际电梯停靠在 %d 层", elevatorDeploymentSvc.d.finalFloor)
@@ -167,13 +173,34 @@ func TestCase7(t *testing.T) {
 
 /*
 补充案例8：
-楼层有7层，电梯在5层。上来一些人后，目标楼层： 7楼、2楼、3楼、4楼、6楼。
-电梯先向上到6楼，然后到7楼，之后转头到4楼、3楼、2楼，最后停在2楼。
+按照改进后的规则运行电梯
+楼层有7层，电梯在3层。上来一些人后，目标楼层： 2楼、1楼、5楼、4楼、6楼。
+电梯先向上到4楼，然后到5楼、6楼，之后转头到2楼、1楼，最后停在1楼。
 */
 func TestCase8(t *testing.T) {
 	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
-	elevator8 := getFakeElevatorInfoFromInput2()
+	elevator8 := getFakeElevatorInfoFromInput1()
 	elevatorDeploymentSvc.DeployElevator(elevator8)
+	if elevatorDeploymentSvc.d.finalFloor != 1 {
+		t.Fatalf("预期电梯停在 1 楼，实际电梯停靠在 %d 层", elevatorDeploymentSvc.d.finalFloor)
+	}
+	if elevatorDeploymentSvc.d.timeDuration != time.Second*time.Duration(8) {
+		t.Fatalf("预期电梯运行花费 8 秒，实际电梯运行时间为：%v\n", elevatorDeploymentSvc.d.timeDuration)
+	}
+	if elevatorDeploymentSvc.d.deployStrategy != "电梯在 3 层，开始运行\n电梯停靠在 4 层，开门，关门\n电梯停靠在 5 层，开门，关门\n电梯停靠在 6 层，开门，关门\n电梯停靠在 2 层，开门，关门\n电梯停靠在 1 层，开门，关门\n最终电梯停靠在 1 层，共用时 8s\n" {
+		t.Fatalf("电梯部署有误，正确运行顺序为4, 5, 6, 2, 1，实际电梯运行顺序为：%v\n", elevator8.orderOfDockedFloors)
+	}
+}
+
+/*
+补充案例8：
+楼层有7层，电梯在5层。上来一些人后，目标楼层： 7楼、2楼、3楼、4楼、6楼。
+电梯先向上到6楼，然后到7楼，之后转头到4楼、3楼、2楼，最后停在2楼。
+*/
+func TestCase9(t *testing.T) {
+	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
+	elevator9 := getFakeElevatorInfoFromInput2()
+	elevatorDeploymentSvc.DeployElevator(elevator9)
 	if elevatorDeploymentSvc.d.finalFloor != 2 {
 		t.Fatalf("预期电梯停在 2 楼，实际电梯停靠在 %d 层", elevatorDeploymentSvc.d.finalFloor)
 	}
@@ -181,6 +208,27 @@ func TestCase8(t *testing.T) {
 		t.Fatalf("预期电梯运行花费 7 秒，实际电梯运行时间为：%v\n", elevatorDeploymentSvc.d.timeDuration)
 	}
 	if elevatorDeploymentSvc.d.deployStrategy != "电梯在 5 层，开始运行\n电梯停靠在 6 层，开门，关门\n电梯停靠在 7 层，开门，关门\n电梯停靠在 4 层，开门，关门\n电梯停靠在 3 层，开门，关门\n电梯停靠在 2 层，开门，关门\n最终电梯停靠在 2 层，共用时 7s\n" {
-		t.Fatalf("电梯部署有误，正确运行顺序为6, 7, 4, 3, 2，实际电梯运行顺序为：%v\n", elevator8.orderOfDockedFloors)
+		t.Fatalf("电梯部署有误，正确运行顺序为6, 7, 4, 3, 2，实际电梯运行顺序为：%v\n", elevator9.orderOfDockedFloors)
+	}
+}
+
+/*
+补充案例10：
+按照改进后的规则运行电梯
+楼层有7层，电梯在5层。上来一些人后，目标楼层： 7楼、2楼、3楼、4楼、6楼。
+电梯先向下到4楼，然后到3楼，再到3楼、2楼，转头到6楼，最后停在7楼。
+*/
+func TestCase10(t *testing.T) {
+	elevatorDeploymentSvc := &elevatorDeploymentService{d: GetElevatorDeployment()}
+	elevator10 := getFakeElevatorInfoFromInput3()
+	elevatorDeploymentSvc.DeployElevator(elevator10)
+	if elevatorDeploymentSvc.d.finalFloor != 7 {
+		t.Fatalf("预期电梯停在 7 楼，实际电梯停靠在 %d 层", elevatorDeploymentSvc.d.finalFloor)
+	}
+	if elevatorDeploymentSvc.d.timeDuration != time.Second*time.Duration(8) {
+		t.Fatalf("预期电梯运行花费 8 秒，实际电梯运行时间为：%v\n", elevatorDeploymentSvc.d.timeDuration)
+	}
+	if elevatorDeploymentSvc.d.deployStrategy != "电梯在 5 层，开始运行\n电梯停靠在 4 层，开门，关门\n电梯停靠在 3 层，开门，关门\n电梯停靠在 2 层，开门，关门\n电梯停靠在 6 层，开门，关门\n电梯停靠在 7 层，开门，关门\n最终电梯停靠在 7 层，共用时 8s\n" {
+		t.Fatalf("电梯部署有误，正确运行顺序为4, 3, 2, 6, 7，实际电梯运行顺序为：%v\n", elevator10.orderOfDockedFloors)
 	}
 }
