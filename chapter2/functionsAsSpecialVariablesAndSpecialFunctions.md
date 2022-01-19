@@ -1,0 +1,52 @@
+### 🔸 函数作为特殊变量 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function3/main.go)
+
+函数除了单独定义外，还可以作为变量使用，变量类型是**方法**。该变量可以作为方法调用来使用。函数变量可以这样定义：
+```
+    var function_name func([parameter list]) (return value list)
+```
+函数变量在赋值时有条件：
+- 变量类型不能变，函数**只能作为函数**来使用，
+- 变量定义后必须使用。普通函数可以单独存在而不必使用，但是**函数变量定义后必须使用**
+- 强类型，定义的函数变量的**参数类型和返回值类型必须一致**，才能够进行赋值
+
+**匿名函数**
+
+匿名函数没有函数名，只有函数逻辑体，定义格式为：
+```
+    func([parameter list])(return_value_list) {
+        function body: executive statements
+    }
+```
+> 【应用】什么情况下使用匿名函数？
+>
+> 对于只用到一次，不会重复使用的函数，不需要命名，在定义函数之后立即使用；还可以作为回调函数使用：
+>
+> ```
+> 1. use anonymous functions just after declaration
+> 
+> func([parameter list]) (return_value_list) {
+> function body: executive statements
+> }([parameter list])
+> 
+> 2. use anonymous functions as callback functions
+> 
+> func function_name_1([parameter list 1], function_name_2 func([parameter list 2])(return_value_list_2))(return_value_list_1){
+> function body: executive statements
+> }
+> func main() {
+> function_name_1([parameter list 1], func([parameter list 2])(return_value_list_2){
+> function body: executive statements
+> })
+> }
+> ```
+>
+
+### 🔸 特殊函数 [link](https://github.com/AdaSheng07/ready.to.go/blob/f03ac8deb4c07d421624d5c91d1efccbbf8b95b6/chapter2/009.function4/main.go)
+
+**`init`函数**
+
+`init`函数是在包被引用时**用于包初始化**的函数。
+特殊点在于：
+- 函数参数为空
+- 不需要、也不可以被调用，由`Golang`默认自动执行
+- 一个`Go`文件、包中可以有多个`init`函数，依照定义顺序在`main`主函数运行前自动运行
