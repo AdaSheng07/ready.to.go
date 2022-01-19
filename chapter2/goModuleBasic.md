@@ -1,0 +1,194 @@
+## Go Module - Basic
+
+### 🔸 初识 Go Module
+
+Go Module是 Golang 官方提供的依赖管理方案。一个 Go Module 代表一个独立的、可使用的模块。
+
+``` 
+  module xxxx   // 定义module的名称
+  go 1.17       // 定义golang的版本，不同版本的module行为上略有区别，但核心规则是相同的
+```
+**初始化Go Module**
+
+Golang 官方提供初始化 Go Module 命令行`$ go mod init[module path]`:
+
+[!image](https://github.com/AdaSheng07/ready.to.go/blob/3e4f5dd099b31633b4473288dc1b2b5c913879b9/pics/module_1.png)
+
+- `[module path]`为可选参数，但当其不是在`$GOPATH/src`文件夹中时，必须指定。`[module path]`会被默认为`module`的名称。
+- 在`$GOPATH/src`文件夹中时，可以不指定，默认会以相对于`src`文件夹的路径。
+- 生成的`go.mod`文件中不包含 Golang 官方包。
+
+### 🔸 Go Module 实战例题
+
+如果需要利用从命令行传入的数据进行计算，可以使用`os.Args`：
+  ```
+  var (
+      name   string
+      sex    string
+      height string // float64
+      weight string // float64
+      age    string // int
+  )
+  arguments := os.Args
+  fmt.Println(arguments)
+  ```
+在这里，`arguments`是一个切片`slice`，在编辑配置给出数据后，打印的`arguments`如下：
+  ```
+  [/private/var/folders/7l/pnr12b8962l7dwhrxxzjd9500000gn/T/GoLand/___go_build_learn_go_chapter2_014_bfrCmdCalculator 小强 男 1.7 70 35]
+  name:  小强
+  sex:  男
+  height:  1.7
+  weight:  70
+  age:  35
+  ```
+由此可知，切片`arguments`的第一个元素是 go 文件本身，传入的数据索引从`1`开始，而且数据必须严格按照顺序传入，且所有录入数据的格式都是`string`，需要手动转换，这样的程序明显健壮性不足。
+
+如何改进？
+
+我们当然可以写一个说明文档，解释传入数据的方法和要求，但更简洁的方法是参照`git`的命令行语句，用不同的参数执行不同的功能。
+
+**引用第三方包**
+
+在引入第三方包时，如果此包本地从未缓存过，可以先定义一个别名为"`_`"的引用，然后运行`go mod tidy`来让系统初始化引入的第三方的包，然后再使用。
+
+比如，这里我们引入`cobra`：
+  ```
+  import (
+      _ "github.com/spf13/cobra"
+  )
+  ```
+再在`Terminal`的`go.mod`文件路径下执行`go mod tidy`完成配置：
+  ```
+  $ go mod tidy
+  go: finding module for package github.com/spf13/cobra
+  go: downloading github.com/spf13/cobra v1.3.0
+  go: found github.com/spf13/cobra in github.com/spf13/cobra v1.3.0
+  go: downloading github.com/inconshreveable/mousetrap v1.0.0
+  go: downloading github.com/spf13/pflag v1.0.5
+  ```
+
+> 【注意】这里`github.com/spf13/cobra`是第三方包的路径，`cobra`是目录下的文件名，并不是包的名称。`control/command` + 左键点击可以`goto`自动跳转至文件目录下进行查看项目正在依赖的包，打开其中的 go 文件可以查看包的名称，大部分开源社区的 module 文件名与包名都是一致的。
+>
+> ![image](https://github.com/AdaSheng07/ready.to.go/blob/ab8d28ec0c11cd5b153f96f0baba3f7e133aed07/pics/package_3.png)
+
+**使用第三方依赖包**
+
+利用`cobra`包中的`Command`功能传入计算，替代原代码中的`os.Args`。定义其中需要的变量，以及命令行参数需要的命令行对象：
+  ```
+  func main() {
+      var (
+          name   string
+          sex    string
+          height float64
+          weight float64
+          age    int
+      )
+      cmd := cobra.Command{
+          Use:   "bfrCheck",    // use: set a name for this command
+          Short: "基于BMI的体脂计算器", // short: a short description for this command
+          // long: a detailed explanation for this command
+          Long: "录入姓名、性别、身高、体重和年龄，计算他们的BMI值，基于他们的性别和年龄生成他们的体脂率标准，判断他们的体脂率处于偏瘦/标准/偏胖/严重肥胖并给出健康建议。",
+          // func is a registered callback function, Run is the main body of cmd, custom-made as desired
+          Run: func(cmd *cobra.Command, args []string) {
+              fmt.Println("name: ", name)
+              fmt.Println("sex: ", sex)
+              fmt.Println("height: ", height)
+              fmt.Println("weight: ", weight)
+              fmt.Println("age: ", age)
+              // calculate bmi & bfr...
+              
+              // healthiness assessment & suggestions
+              
+          },
+      }
+  ```
+利用`Flags()`配置需要的各参数：
+  ```
+      /*
+          func (f *FlagSet) StringVar(p *string, name string, value string, usage string)
+          StringVar defines a string flag with specified name, default value, and usage string.
+          The argument p points to a string variable in which to store the value of the flag.
+      */
+      cmd.Flags().StringVar(&name, "name", "", "姓名")
+      // this means: when we type in command line, what comes after "name" will be saved in variable name as string.
+      // if we give nothing after "name", the variable name will be the default value "".
+      cmd.Flags().StringVar(&sex, "sex", "", "性别")
+      cmd.Flags().Float64Var(&height, "height", 0, "身高")
+      cmd.Flags().Float64Var(&weight, "weight", 0, "体重")
+      cmd.Flags().IntVar(&age, "age", 0, "年龄")
+  ```
+在`main()`增加语句运行已定义的命令行对象：
+  ```
+  cmd.Execute()
+  ```
+在`Terminal`运行程序得到：
+  ```
+  $ go run ./main.go
+  name:  
+  sex:  
+  height:  0
+  weight:  0
+  age:  0
+  ```
+通过命令行的帮助选项查看配置与使用方法：
+  ```
+  $ go run ./main.go --help
+  录入姓名、性别、身高、体重和年龄，计算他们的BMI值，基于他们的性别和年龄生成他们的体脂率标准，判断他们的体脂率处于偏瘦/标准/偏胖/严重肥胖并给出健康建议。
+  
+  Usage:
+    bfrCheck [flags]
+  
+  Flags:
+        --age int        年龄
+        --height float   身高
+    -h, --help           help for bfrCheck
+        --name string    姓名
+        --sex string     性别
+        --weight float   体重
+  ```
+通过命令行对象，我们可以实现乱序输入，并且数据格式会自动转换。实际使用方法为：
+  ```
+  $ go run ./main.go --age 35 --name 小强 --weight 70 --height 1.70 --sex 男
+  name:  小强
+  sex:  男
+  height:  1.7
+  weight:  70
+  age:  35
+  ```
+在命令行对象的`Run`的主体函数中，我们也可以调用其它包的函数完善其它功能。比如：
+  ```
+  // calculate bmi & bfr...
+  bmi := calc.CalcBMI(height, weight)
+  bfr := calc.CalcBFRUpgrade(bmi, age, sex)
+  fmt.Println("Body Fat Rate:", bfr)
+  ```
+在`Terminal`中运行后得到的结果：
+  ```
+  $ go run ./main.go --age 35 --name 小强 --weight 65 --height 1.70 --sex 男
+  name:  小强
+  sex:  男
+  height:  1.7
+  weight:  65
+  age:  35
+  Body Fat Rate: 0.18489619377162636
+  ```
+
+> 【总结】在使用第三方依赖包时，先定位需要使用的某个工具，导入（巧用"`_`"技巧）后`go mod tidy`拉取需要的缺少的模块，移除不用的模块。
+> ```
+> Usage:
+>
+>    go mod <command> [arguments]
+>
+> The commands are:
+>
+>    download    download modules to local cache
+>    edit        edit go.mod from tools or scripts
+>    graph       print module requirement graph
+>    init        initialize new module in current directory
+>    tidy        add missing and remove unused modules
+>    vendor      make vendored copy of dependencies
+>    verify      verify dependencies have expected content
+>    why         explain why packages or modules are needed
+>
+> Use "go help mod <command>" for more information about a command.
+> ```
