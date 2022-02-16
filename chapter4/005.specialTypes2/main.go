@@ -11,7 +11,6 @@ type English = int
 func main() {
 	var mathScore1 int = 100
 	var mathScore2 Math = 99
-
 	mathScore2 = mathScore1 // value of mathScore1 can be assigned to mathScore2, they have the same type
 	fmt.Println(mathScore2)
 
@@ -22,8 +21,7 @@ func main() {
 			&student{name: fmt.Sprintf("%s", "c")},
 			&student{name: fmt.Sprintf("%s", "d")},
 			&student{name: fmt.Sprintf("%s", "e")},
-			&student{name: fmt.Sprintf("%s", "f")},
-			&student{name: fmt.Sprintf("%s", "g")},
+			&student{name: fmt.Sprintf("%s", "f")}, &student{name: fmt.Sprintf("%s", "g")},
 			&student{name: fmt.Sprintf("%s", "h")},
 			&student{name: fmt.Sprintf("%s", "i")},
 			&student{name: fmt.Sprintf("%s", "j")},
@@ -43,36 +41,23 @@ func main() {
 			&student{name: fmt.Sprintf("%s", "x")},
 			&student{name: fmt.Sprintf("%s", "y")},
 			&student{name: fmt.Sprintf("%s", "z")},
-			&student{name: fmt.Sprintf("%s", "aa")},
-			&student{name: fmt.Sprintf("%s", "bb")},
-			&student{name: fmt.Sprintf("%s", "cc")},
-			&student{name: fmt.Sprintf("%s", "dd")},
-			&student{name: fmt.Sprintf("%s", "ee")},
-			&student{name: fmt.Sprintf("%s", "ff")},
-			&student{name: fmt.Sprintf("%s", "gg")},
-			&student{name: fmt.Sprintf("%s", "hh")},
-			&student{name: fmt.Sprintf("%s", "ii")},
-			&student{name: fmt.Sprintf("%s", "jj")},
-			&student{name: fmt.Sprintf("%s", "kk")},
-			&student{name: fmt.Sprintf("%s", "ll")},
-			&student{name: fmt.Sprintf("%s", "mm")},
-			&student{name: fmt.Sprintf("%s", "nn")},
-			&student{name: fmt.Sprintf("%s", "oo")},
-			&student{name: fmt.Sprintf("%s", "pp")},
-			&student{name: fmt.Sprintf("%s", "qq")},
-			&student{name: fmt.Sprintf("%s", "rr")},
-			&student{name: fmt.Sprintf("%s", "ss")},
-			&student{name: fmt.Sprintf("%s", "tt")},
-			&student{name: fmt.Sprintf("%s", "uu")},
-			&student{name: fmt.Sprintf("%s", "vv")},
-			&student{name: fmt.Sprintf("%s", "ww")},
-			&student{name: fmt.Sprintf("%s", "xx")},
-			&student{name: fmt.Sprintf("%s", "yy")},
-			&student{name: fmt.Sprintf("%s", "zz")},
 		},
 	}
 	monitor := v.goRun()
 	fmt.Println(*monitor)
+	monitor.Distribute()
+
+	var stdXQ = &student{name: "xiaoqiang"}
+	var stdLH = student{name: "lihua"}
+	var ldXQ Monitor = Monitor(*stdXQ)
+	var ldLH *Monitor = (*Monitor)(&stdLH)
+	ldXQ.Distribute()
+	ldLH.Distribute()
+	fmt.Println(ldXQ, ldLH)
+
+	// 与byte的强行转换类似：
+	//bytesTest1 := []byte{}
+	//var str1 string = string(bytesTest1)
 }
 
 // renaming types improves readability of codes, for example:
@@ -105,7 +90,9 @@ func (v *voting) goRun() *Monitor {
 		}
 	}
 	if maxScoreIndex >= 0 {
-		return v.students[maxScoreIndex]
+		// return v.students[maxScoreIndex] // 此时返回的是student，不是monitor，程序报错
+		// 强制转换对象类型：
+		return (*Monitor)(v.students[maxScoreIndex])
 	}
 	return nil
 }
@@ -116,7 +103,27 @@ type student struct {
 	disagree int
 }
 
-type Monitor = student
+// 使用嵌套对象定义（继承）方式来定义班长
+//type Monitor struct {
+//	student
+//}
+
+// Monitor 使用类型（对象）重定义
+type Monitor student
+
+// Distribute 新类型Monitor可以拥有自己的方法
+func (m *Monitor) Distribute() {
+	fmt.Println("发作业")
+}
+
+// 也可以对函数类型添加新的方法
+type WhatIfAFunction func()
+
+func (w *WhatIfAFunction) test111() {
+
+}
+
+type WhatIfAnArray []string // 引用类型
 
 func (std *student) voteAgree(voted *student) {
 	voted.agree++
