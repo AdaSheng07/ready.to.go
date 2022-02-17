@@ -1,20 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	dd := &downloadFromDisk{
-		password: func() string {
-			// ...
-			return "1234567"
-		},
+		password: &mobileTokenDynamics{mobileNumber: "13427495733"},
 		filePath: "module 6",
 	}
 	dd.DownloadFile()
 }
 
+type DynamicPassword interface {
+	GetPassword() string
+}
+
+type mobileTokenDynamics struct {
+	mobileNumber string
+}
+
+func (mbd *mobileTokenDynamics) GetPassword() string {
+	return "1234567"
+}
+
 type downloadFromDisk struct {
-	password func() string
+	password DynamicPassword
 	filePath string
 }
 
@@ -26,7 +37,7 @@ func (dd *downloadFromDisk) DownloadFile() {
 }
 
 func (dd *downloadFromDisk) loginCheck() error {
-	err := dd.checkPassword(dd.password())
+	err := dd.checkPassword(dd.password.GetPassword())
 	if err != nil {
 		return err
 	}
