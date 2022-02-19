@@ -7,6 +7,7 @@ type Assets struct {
 func (a *Assets) OnDuty() {
 	for _, item := range a.assets {
 		if d, ok := item.(Door); ok {
+			d.Unlock()
 			d.Open()
 		}
 	}
@@ -16,6 +17,7 @@ func (a *Assets) OffDuty() {
 	for _, item := range a.assets {
 		if d, ok := item.(Door); ok {
 			d.Close()
+			d.Lock()
 		}
 	}
 }
