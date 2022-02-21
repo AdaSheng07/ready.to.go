@@ -24,10 +24,6 @@ func main() {
 	fatRates := []float64{}
 	fatRatesLock := sync.RWMutex{}
 
-	//fatRateList := &FatRateList{
-	//	FatRates: []float64{},}
-	// 1000人的体脂率
-
 	// 生成随机数base，base范围在[0, 0.4]
 	rand.Seed(time.Now().UnixNano())
 	base := rand.Float64() * 0.4
@@ -50,40 +46,46 @@ func main() {
 
 	//fmt.Println("查询排名")
 	count := 1000
+	wgLookup := sync.WaitGroup{}
+	wgLookup.Add(count)
+	wgUpdate := sync.WaitGroup{}
+	wgUpdate.Add(count)
 	// 查询排名
-	go func() {
-		for c := 0; c < count; c++ {
-			fmt.Println(persons[c].Name, "号开始查询排名：")
-			time.Sleep(1 * time.Millisecond)
-			persons[c].lock.Lock()
-			GetRank(c, fatRates, &fatRatesLock, persons)
-			persons[c].lock.Unlock()
-		}
-	}()
+	for c := 0; c < count; c++ {
+		go func(p []Person, fr []float64, lock *sync.RWMutex, c int) {
+			defer wgLookup.Done()
+			fmt.Println(p[c].Name, "号开始查询排名：")
+			GetRank(c, fr, lock, p)
+		}(persons, fatRates, &fatRatesLock, c)
+	}
 
 	//fmt.Println("更新并打印排名")
 	// 更新并打印排名
-	go func() {
-		for c := 0; c < count; c++ {
+	for c := 0; c < count; c++ {
+		go func(p []Person, fr []float64, lock *sync.RWMutex, c int) {
+			defer wgUpdate.Done()
 			fmt.Println(persons[c].Name, "号开始更新排名：")
-			time.Sleep(1 * time.Millisecond)
-			persons[c].lock.Lock()
 			for {
 				rand.Seed(time.Now().UnixNano())
 				delta := rand.Float64()*0.4 - 0.2 // 体脂率波动范围[-0.2, 0.2]
 				// 保证体脂率是非负数，防止非法输入
 				if base+delta >= 0 {
+					//persons[c].lock.Lock()
 					persons[c].FatRate = base + delta
+					//persons[c].lock.Unlock()
+					//fatRatesLock.Lock()
 					fatRates[persons[c].Rank] = base + delta
+					//fatRatesLock.Unlock()
 					break
 				}
 			}
 			GetRank(c, fatRates, &fatRatesLock, persons)
-			persons[c].lock.Unlock()
-		}
-	}()
+		}(persons, fatRates, &fatRatesLock, c)
+	}
+	wgLookup.Wait()
+	wgUpdate.Wait()
+	fmt.Println("end")
 
-	time.Sleep(10 * time.Second)
 }
 
 func GetRank(c int, fatRates []float64, fatRatesLock *sync.RWMutex, persons []Person) {
@@ -92,7 +94,9 @@ func GetRank(c int, fatRates []float64, fatRatesLock *sync.RWMutex, persons []Pe
 	fatRatesLock.Unlock()
 	fatRatesLock.RLock()
 	index, _ := strconv.Atoi(persons[c].Name)
-	persons[c].Rank = sort.SearchFloat64s(fatRates, persons[index].FatRate)
+	persons[c].lock.Lock()
+	persons[c].Rank = sort.SearchFloat64s(fatRates, persons[index].FatRate) + 1
+	persons[c].lock.Unlock()
 	fatRatesLock.RUnlock()
 	fmt.Println(persons[c].Name, "号的体脂率排名为：", persons[c].Rank)
 }
