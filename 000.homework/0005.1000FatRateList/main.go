@@ -13,7 +13,7 @@ type Person struct {
 	Name    string
 	FatRate float64
 	Rank    int
-	lock    sync.Mutex
+	lock    sync.RWMutex
 }
 
 func main() {
@@ -70,12 +70,8 @@ func main() {
 				delta := rand.Float64()*0.4 - 0.2 // 体脂率波动范围[-0.2, 0.2]
 				// 保证体脂率是非负数，防止非法输入
 				if base+delta >= 0 {
-					//persons[c].lock.Lock()
 					persons[c].FatRate = base + delta
-					//persons[c].lock.Unlock()
-					//fatRatesLock.Lock()
 					fatRates[persons[c].Rank] = base + delta
-					//fatRatesLock.Unlock()
 					break
 				}
 			}
