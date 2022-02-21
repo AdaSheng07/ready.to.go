@@ -14,20 +14,21 @@ type Person struct {
 	FatRate float64
 	Rank    int
 	lock    sync.Mutex
+	pCond   sync.Cond
 }
 
 type FatRateList struct {
 	FatRates []float64
-	lock     sync.RWMutex
+	lock     sync.Mutex
 }
 
-func (p *Person) GetRank(name string, persons []Person, fatRates []float64) (rank int) {
-	p.lock.Lock()
-	defer p.lock.Unlock()
-	sort.Float64s(fatRates)
-	i, _ := strconv.Atoi(name)
-	return sort.SearchFloat64s(fatRates, persons[i].FatRate)
-}
+//func (p *Person) GetRank(name string, persons []Person, fatRates []float64) (rank int) {
+//	p.lock.Lock()
+//	defer p.lock.Unlock()
+//	sort.Float64s(fatRates)
+//	i, _ := strconv.Atoi(name)
+//	return sort.SearchFloat64s(fatRates, persons[i].FatRate)
+//}
 
 func main() {
 
@@ -76,13 +77,22 @@ func main() {
 	}
 
 	fmt.Println("更新并打印排名")
-	count := 1000
 	for c := 0; c < count; c++ {
-		// 查询排名
+		// 更新并打印排名
 		go func(c int) {
-			fmt.Println(persons[c].Name, "号开始查询排名：")
+			fmt.Println(persons[c].Name, "号开始更新排名：")
 			persons[c].lock.Lock()
 			fatRateList.lock.Lock()
+			for {
+				rand.Seed(time.Now().UnixNano())
+				delta := rand.Float64()*0.4 - 0.2 // 体脂率波动范围[-0.2, 0.2]
+				// 保证体脂率是非负数，防止非法输入
+				if base+delta >= 0 {
+					persons[c].FatRate = base + delta
+					fatRateList.FatRates[persons[c].Rank] = base + delta
+					break
+				}
+			}
 			sort.Float64s(fatRateList.FatRates)
 			fatRateList.lock.Unlock()
 			index, _ := strconv.Atoi(persons[c].Name)
